@@ -1,0 +1,75 @@
+/* style.css */
+:root {
+    --primary: #ff1d58;
+    --secondary: #f75990;
+    --alternative: #fff685;
+    --accent: #00ddff;
+    --dark: #0049b7;
+    --font-color: #fff;
+    --font-color-alt: var(--dark);
+    --radius: 4px;
+    --h1: 32px;
+    --h2: 24px;
+}
+body {
+    margin: 0px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 100%;
+}
+
+.sketch {
+    display: flex;
+    padding: 32px;
+    align-items: center;
+}
+
+.columnBox {
+    flex: 0 1 auto;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.left {
+    background-color: var(--primary);
+}
+
+.statusBar {
+    margin: 16px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    color: var(--font-color);
+    background-color: var(--dark);
+    align-items: center;
+    border-radius: var(--radius);
+}
+
+.status {
+    padding: 16px;
+}
+
+.playback {
+    padding: 16px;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.playbackIcon {
+    margin: 1px;
+    height: 64px;
+    width: 64px;
+    border-radius: var(--radius);
+    color: var(--font-color-alt);
+    background-color: var(--accent);
+    text-align: center;
+    font-size: var(--h2);
+}
+
+.playbackIcon:hover {
+    background-color: var(--alternative);    
+}
