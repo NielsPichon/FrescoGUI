@@ -1,7 +1,3 @@
-// this is where the temporary json buffer will be stored
-// upon calling the axidraw GUI from a sketch
-const defaultPath = "./tmp.json";
-
 // helper for the various default formats
 const formats = {
   a3: [297, 420],
@@ -13,7 +9,7 @@ let currentShapes = []; // shapes to draw
 let currentFormat = formats.a3; // current paper format
 let currentMargin = 0; // margin on each side of the canvas
 let currentAspectRatio = 1; // drawing aspect ratio
-let currentFilePath = defaultPath; // path to the serialized drawing
+let currentJSONData = JSON.parse(window.shapes); // path to the serialized drawing
 
 function setup() {
   let canvas = createCanvas(currentFormat[0] / currentFormat[1] * window.innerHeight, window.innerHeight);
@@ -21,7 +17,7 @@ function setup() {
   canvas.parent('sketch-holder');
 
   // load the drawing in the default path if it exists
-  loadDrawing(defaultPath);
+  updateDrawing();
 
   // prevent drawing continuously
   noLoop();
@@ -33,18 +29,33 @@ function draw() {
   currentShapes.forEach(s => s.draw());
 }
 
+/**
+ * Update the paper format and refresh the preview canvas
+ * @param {Array<number>} format format in mm x mm
+ */
 function updateFormat(format) {
   resizeCanvas(format[0], format[1], true);
   updateShapes(currentShapes, format, currentMargin, currentAspectRatio);
   redraw();
 }
 
+/**
+ * Updates the margin to the specified value and redraws the preview canvas
+ * @param {number} margin margin in mm
+ */
 function updateMargin(margin) {
   currentMargin = margin;
   updateShapes(currentShapes, currentFormat, currentMargin, currentAspectRatio);
   redraw();
 }
 
+/**
+ * Fit the shapes to the paper size
+ * @param {Array<Fresco.Shape>} shapes 
+ * @param {Array<number>} format 
+ * @param {number} margin 
+ * @param {number} aspectRatio 
+ */
 function updateShapes(shapes, format, margin, aspectRatio) {
   let nuFormat = [format[0] / format[1] * window.innerHeight, window.innerHeight];
   let nuMargin = margin * window.innerHeight / format[1];
@@ -69,40 +80,53 @@ function updateShapes(shapes, format, margin, aspectRatio) {
   currentShapes = shapes;
 }
 
+/**
+ * Update the shapes based on the current json data and draws them
+ */
+function updateDrawing() {
+  console.log(currentJSONData)
+  if ("shapes" in currentJSONData) {
+    currentJSONData = currentJSONData["shapes"];
+  }
+  else {
+    currentJSONData = [currentJSONData];
+  }
 
+  // convert the drawing to shapes
+  let shapes = [];
+  currentJSONData.forEach(shape => {
+    shapes.push(shapeFromJSON(shape, false));
+  })
+  
+  // extract aspect ratio
+  currentAspectRatio = currentJSONData[0]['canvas_width'] / currentJSONData[0]['canvas_height'];
+  
+  // fit the shapes to canvas/paper
+  updateShapes(shapes, currentFormat, currentMargin, currentAspectRatio);
+
+  // redraw
+  redraw();
+}
+
+/**
+ * Load a drawing from a JSON file ad update drawing once done
+ * @param {string} filepath path to file
+ */
 function loadDrawing(filepath) {
-  currentFilePath = filepath;
-  console.log('Loading', currentFilePath);
+  console.log('Loading', currentJSONData);
   loadJSON(filepath, function(response) {
       // Parsing JSON string into object
       console.log('response', response);
-      let shapesJSON = response;
-
-      if ("shapes" in shapesJSON) {
-        shapesJSON = shapesJSON["shapes"];
-      }
-      else {
-        shapesJSON = [shapesJSON];
-      }
-  
-      // convert the drawing to shapes
-      let shapes = [];
-      shapesJSON.forEach(shape => {
-        shapes.push(shapeFromJSON(shape, false));
-      })
-      
-      // extract aspect ratio
-      currentAspectRatio = shapesJSON[0]['canvas_width'] / shapesJSON[0]['canvas_height'];
-      
-      // fit the shapes to canvas/paper
-      updateShapes(shapes, currentFormat, currentMargin, currentAspectRatio);
-  
-      // redraw
-      redraw();
+      currentJSONData = response;
+      updateDrawing();
   });
 }
 
-// load a json file
+/**
+ * Load a JSON file from localhost
+ * @param {string} filepath path to file
+ * @param {*} callback callback function to perform once loading is done
+ */
 function loadJSON(filepath, callback) {   
   var http = new XMLHttpRequest();
   http.overrideMimeType("application/json");
