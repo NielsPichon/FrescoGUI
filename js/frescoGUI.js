@@ -108,21 +108,20 @@ function updateDrawing() {
   
   if (currentJSONData) {
     if ("shapes" in currentJSONData) {
-      currentJSONData = currentJSONData["shapes"];
     }
     else {
-      currentJSONData = [currentJSONData];
+      currentJSONData = {shapes: [currentJSONData]};
     }
 
     // convert the drawing to shapes
     let shapes = [];
 
-    currentJSONData.forEach(shape => {
+    currentJSONData['shapes'].forEach(shape => {
       shapes.push(shapeFromJSON(shape, false));
     })
     
     // extract aspect ratio
-    currentAspectRatio = currentJSONData[0]['canvas_width'] / currentJSONData[0]['canvas_height'];
+    currentAspectRatio = currentJSONData['shapes'][0]['canvas_width'] / currentJSONData['shapes'][0]['canvas_height'];
     
     // fit the shapes to canvas/paper
     updateShapes(shapes, currentFormat, currentMargin, currentAspectRatio);

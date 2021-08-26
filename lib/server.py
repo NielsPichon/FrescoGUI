@@ -1,4 +1,6 @@
-from multiprocessing import Queue, Process
+from multiprocessing import Process
+import threading
+import queue
 import json
 import time
 from http.server import SimpleHTTPRequestHandler, HTTPServer
@@ -79,11 +81,12 @@ def get_browser() -> webbrowser.BaseBrowser:
 
 
 if __name__ == '__main__':
-    q = Queue()
+    q = queue.Queue()
     app.config['Queue'] = q
 
     print('Starting python server...')
-    app_proc = Process(target=app_runner, daemon=True).start()
+    app_proc = threading.Thread(target=app_runner, daemon=True)
+    app_proc.start()
     
     # wait for server initialisation
     time.sleep(1.0)

@@ -4,7 +4,8 @@ import atexit
 import time
 import signal
 from typing import NoReturn, List, Dict
-from multiprocessing import Queue, Process, Event
+from multiprocessing import Process, Event
+from queue import Queue
 
 from AxiFresco.axifresco import Axifresco, Point, json_to_shapes, draw
 
@@ -27,7 +28,9 @@ def axidraw_runner(data, pause_event):
     margin = global_config['margin']
     optimize = global_config['optimize']
     format = global_config['format']
-    
+
+    print(shapes)
+
     shapes, aspect_ratio = json_to_shapes(shapes)
 
     # create the axidraw handler and set the resolution
@@ -46,7 +49,6 @@ def axidraw_runner(data, pause_event):
 
     signal.signal(signal.SIGINT, exit_cleanly)
     signal.signal(signal.SIGTERM, exit_cleanly)
-    signal.signal(signal.SIGKILL, exit_cleanly)
     atexit.register(exit_cleanly)
 
     # draw the shapes
@@ -56,8 +58,7 @@ def axidraw_runner(data, pause_event):
     exit_cleanly()
 
 def draw_request(data):
-    print(data)
-    return
+    print('Drawing...')
     global axi_thread
 
     # if a thread is already running then we don't want to
