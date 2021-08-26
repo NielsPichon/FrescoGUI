@@ -16,6 +16,7 @@ class RequestTypes:
     draw: str = 'draw'
     stop: str = 'stop'
     pause_resume: str = 'pause'
+    reset: str = 'reset'
 
 def axidraw_runner(data, pause_event):
     # process the data
@@ -85,10 +86,17 @@ def pause_resume(*args):
         print('Pausing draw...')
         PAUSE.set()
 
+def reset_axidraw(*args):
+    print('Resetting the axidraw...')
+    ax = Axifresco(config={}, reset=True)
+    ax.stop_motors()
+    ax.axidraw.disconnect()
+
 process_request = {
     RequestTypes.draw: draw_request,
     RequestTypes.stop: stop_draw,
-    RequestTypes.pause_resume: pause_resume
+    RequestTypes.pause_resume: pause_resume,
+    RequestTypes.reset: reset_axidraw
 }
 
 def request_processor(q: Queue) -> NoReturn:
@@ -97,6 +105,7 @@ def request_processor(q: Queue) -> NoReturn:
     """
     try:
         print('Ready to boogie!')
+        print(q)
         while 1:
             request, data = q.get()
             process_request[request](data)

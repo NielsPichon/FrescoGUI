@@ -25,6 +25,12 @@ function sendStopRequest() {
     console.log('Sent stop request');
 }
 
+function sendResetRequest() {
+    sendRequest({}, "reset")
+    console.log('Sent reset request');
+}
+
+
 function formatConfig() {
     return {
         axidraw_options: axidraw_options,

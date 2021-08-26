@@ -22,7 +22,7 @@ axidraw_options = {
 }
 
 let currentShapes = []; // shapes to draw
-let currentFormat = formats.a3; // current paper format
+let currentFormat = formats.a4; // current paper format
 let currentMargin = 0; // margin on each side of the canvas
 let currentAspectRatio = 1; // drawing aspect ratio
 let currentJSONData = null; // json data
