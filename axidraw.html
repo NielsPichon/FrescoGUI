@@ -11,7 +11,8 @@
         <script src="p5.Fresco/js/axifresco.js"></script>
         <script src="p5.Fresco/js/futural.js"></script>
         <script src="p5.Fresco/js/fonts.js"></script>
-        <script src="sketch.js"></script>
+        <script src="js/frescoGUI.js"></script>
+        <script src="js/comm.js"></script>
         <meta charset="utf-8">
     </head>
     <body>
@@ -23,15 +24,15 @@
         <div class="columnBox" id="options">
             <div class="statusBar">
                 <div class="playback">
-                    <div class="playbackIcon" id="play">
+                    <button class="playbackIcon" id="play" onclick="sendDrawRequest()">
                         <p>▶︁</p>
-                    </div>
-                    <div class="playbackIcon" id="pause">
+                    </button>
+                    <button class="playbackIcon" id="pause" onclick="sendPauseResumeRequest()">
                         <p>⏸︁</p>
-                    </div>
-                    <div class="playbackIcon" id="stop">
+                    </button>
+                    <button class="playbackIcon" id="stop" onclick="sendStopRequest()">
                         <p>⏹︁</p>
-                    </div>
+                    </button>
                 </div>
                 <p class='status'>This is the current status of the axidraw.</p>
             </div>            

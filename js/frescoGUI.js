@@ -9,7 +9,12 @@ let currentShapes = []; // shapes to draw
 let currentFormat = formats.a3; // current paper format
 let currentMargin = 0; // margin on each side of the canvas
 let currentAspectRatio = 1; // drawing aspect ratio
-let currentJSONData = JSON.parse(window.shapes); // path to the serialized drawing
+let currentJSONData = null; // json data
+if (window.shapes) {
+  JSON.parse(window.shapes); // load data from window
+}
+let currentSplineResolution = 10; // resolution of the splines
+let optimize = true; // whether the drawing should be optimized before drawing
 
 function setup() {
   let canvas = createCanvas(currentFormat[0] / currentFormat[1] * window.innerHeight, window.innerHeight);
@@ -84,25 +89,31 @@ function updateShapes(shapes, format, margin, aspectRatio) {
  * Update the shapes based on the current json data and draws them
  */
 function updateDrawing() {
-  console.log(currentJSONData)
-  if ("shapes" in currentJSONData) {
-    currentJSONData = currentJSONData["shapes"];
+  
+  if (currentJSONData) {
+    if ("shapes" in currentJSONData) {
+      currentJSONData = currentJSONData["shapes"];
+    }
+    else {
+      currentJSONData = [currentJSONData];
+    }
+
+    // convert the drawing to shapes
+    let shapes = [];
+
+    currentJSONData.forEach(shape => {
+      shapes.push(shapeFromJSON(shape, false));
+    })
+    
+    // extract aspect ratio
+    currentAspectRatio = currentJSONData[0]['canvas_width'] / currentJSONData[0]['canvas_height'];
+    
+    // fit the shapes to canvas/paper
+    updateShapes(shapes, currentFormat, currentMargin, currentAspectRatio);
   }
   else {
-    currentJSONData = [currentJSONData];
+    currentShapes = [];
   }
-
-  // convert the drawing to shapes
-  let shapes = [];
-  currentJSONData.forEach(shape => {
-    shapes.push(shapeFromJSON(shape, false));
-  })
-  
-  // extract aspect ratio
-  currentAspectRatio = currentJSONData[0]['canvas_width'] / currentJSONData[0]['canvas_height'];
-  
-  // fit the shapes to canvas/paper
-  updateShapes(shapes, currentFormat, currentMargin, currentAspectRatio);
 
   // redraw
   redraw();

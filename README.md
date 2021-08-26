@@ -13,4 +13,9 @@ A new tab should open with your drawing previewed on the left. Firefox and Chrom
 so make sure to allow it.
 
 If you want to use the GUI with a pre-existing file, simply lauch the `axidraw.html` file right after
-opening the server and load your file in the option pannel. 
+opening the server and load your file in the option pannel.
+
+# Architecture notes
+There is an HTML server which handles all html requests and which will allow running the p5.js/p5.Fresco sketches and all.
+This one talks on port 8000. Then there is a Flask python server which handles requests from the html page. It talks on port 5000.
+The Flask server will q commands, q that is then read by a dequeueing thread which owns the axidraw manager.

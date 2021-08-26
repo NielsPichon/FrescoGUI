@@ -7,6 +7,8 @@ import webbrowser
 from flask import Flask, request
 from flask_restful import Api
 
+from lib.axirunner import RequestTypes, request_processor
+
 
 PORT = 8000
 
@@ -21,11 +23,6 @@ browsers = [
     'opera'
 ]
 
-class RequestTypes:
-    draw: str = 'draw'
-    stop: str = 'stop'
-    pause_resume: str = 'pause'
-
 @app.route('/draw', methods=['POST'])
 def draw():
     print("Got a new draw request")
@@ -33,7 +30,7 @@ def draw():
     q.put((RequestTypes.draw, draw_data))
     return "sent"
 
-@app.route('/stop_draw', methods=['POST'])
+@app.route('/stop', methods=['POST'])
 def stop():
     print('Got a request to stop immediatly')
     q.put((RequestTypes.stop, ))
@@ -94,5 +91,5 @@ if __name__ == '__main__':
         print('ciao bella')
 
     # # run axidraw handler
-    # axidraw_runner(q)
+    request_processor(q)
 
