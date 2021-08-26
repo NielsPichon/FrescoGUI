@@ -7,8 +7,7 @@ Welcome! This is a GUI to use with an axidraw to draw Fresco json files.
 Clone this repository, then,
 On linux:
     `./setup.sh`
-On windows:
-    Coming soon..
+On windows, double click `setup.bat`
 
 # Running
 Add your sketch somewhere within this directory or its subdiresctories.
@@ -17,8 +16,7 @@ at the very least.
 
 On linux:
     `./AxiFresco`
-On windows:
-    Coming soon...
+On windows, double click `FrescoGUI.bat`
 
 Then navigate to whatever sketch you want to draw. When all is fine, press `a`.
 A new tab should open with your drawing previewed on the left.
