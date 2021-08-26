@@ -39,7 +39,6 @@ def axidraw_runner(data, pause_event):
                    pause_event=pause_event)
     ax.set_format(Point(format['x'], format['y']))
 
-    # make sure that no matter what we'll exit cleanly
     def exit_cleanly():
         print('Shutting down the axidraw before exiting...')
         try:
@@ -47,6 +46,8 @@ def axidraw_runner(data, pause_event):
         except Exception as e:
             print ('Something wrong occured when trying to exit cleanly:\n', e)
 
+    # try exiting cleanly. Will most likely fail to do so because of 
+    # how the terminate instruction works.
     signal.signal(signal.SIGINT, exit_cleanly)
     signal.signal(signal.SIGTERM, exit_cleanly)
     atexit.register(exit_cleanly)
@@ -78,6 +79,9 @@ def stop_draw(*args):
 
     if axi_thread is not None and axi_thread.is_alive():
         axi_thread.terminate()
+        # because the axidraw will most likely have not 
+        # exited cleanly, reset it.
+        reset_axidraw()
 
 def pause_resume(*args):
     if PAUSE.is_set():
