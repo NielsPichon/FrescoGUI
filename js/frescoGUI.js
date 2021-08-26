@@ -11,7 +11,8 @@ let currentMargin = 0; // margin on each side of the canvas
 let currentAspectRatio = 1; // drawing aspect ratio
 let currentJSONData = null; // json data
 if (window.shapes) {
-  JSON.parse(window.shapes); // load data from window
+  print('meh')
+  currentJSONData = JSON.parse(window.shapes); // load data from window
 }
 let currentSplineResolution = 10; // resolution of the splines
 let optimize = true; // whether the drawing should be optimized before drawing

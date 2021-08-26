@@ -4,12 +4,7 @@ Welcome! This is a GUI to use with an axidraw to draw Fresco json files.
 
 
 # Setup
-Clone this repository, then run
-```
-git submodule init
-git submodule update
-```
-
+Clone this repository, then,
 On linux:
     `./setup.sh`
 On windows:

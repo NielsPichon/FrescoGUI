@@ -30,8 +30,11 @@ browsers = [
 @cross_origin()
 def draw():
     print("Got a new draw request")
-    draw_data = request.data.decode()
-    q.put((RequestTypes.draw, draw_data))
+    try:
+        draw_data = json.loads(request.data.decode())
+        q.put((RequestTypes.draw, draw_data))
+    except:
+        return "invalid data"
     return "sent"
 
 @app.route('/stop', methods=['POST'])
@@ -90,12 +93,6 @@ if __name__ == '__main__':
     browser = get_browser()
     browser.open(f'http://0.0.0.0:{PORT}')
 
-    try:
-        while True:
-            time.sleep(0.5)
-    except KeyboardInterrupt:
-        print('ciao bella')
-
-    # # run axidraw handler
+    # run axidraw handler
+    print('Starting axidraw handler...')
     request_processor(q)
-
