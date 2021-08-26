@@ -5,7 +5,7 @@ import time
 import signal
 from typing import NoReturn, List, Dict
 from multiprocessing import Queue, Process, Event
- 
+
 from AxiFresco.axifresco import Axifresco, Point, json_to_shapes, draw
 
 
@@ -55,6 +55,8 @@ def axidraw_runner(data, pause_event):
     exit_cleanly()
 
 def draw_request(data):
+    print('Got some data to draw', data)
+    return
     global axi_thread
 
     # if a thread is already running then we don't want to
@@ -69,6 +71,7 @@ def draw_request(data):
     axi_thread.start()
 
 def stop_draw(*args):
+    print('Stopping...')
     global axi_thread
 
     if axi_thread is not None and axi_thread.is_alive():
@@ -76,8 +79,10 @@ def stop_draw(*args):
 
 def pause_resume(*args):
     if PAUSE.is_set():
+        print('Resuming...')
         PAUSE.clear()
     else:
+        print('Pausing...')
         PAUSE.set()
 
 process_request = {

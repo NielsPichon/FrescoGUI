@@ -6,6 +6,7 @@ import webbrowser
 
 from flask import Flask, request
 from flask_restful import Api
+from flask_cors import CORS, cross_origin
 
 from lib.axirunner import RequestTypes, request_processor
 
@@ -14,6 +15,8 @@ PORT = 8000
 
 app = Flask(__name__)
 api = Api(app)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 browsers = [
     'windows-default',
@@ -24,22 +27,25 @@ browsers = [
 ]
 
 @app.route('/draw', methods=['POST'])
+@cross_origin()
 def draw():
     print("Got a new draw request")
-    draw_data = json.loads(request.data.decode())["input"]
+    draw_data = request.data.decode()
     q.put((RequestTypes.draw, draw_data))
     return "sent"
 
 @app.route('/stop', methods=['POST'])
+@cross_origin()
 def stop():
     print('Got a request to stop immediatly')
-    q.put((RequestTypes.stop, ))
+    q.put((RequestTypes.stop, ''))
     return "sent"
 
 @app.route('/pause', methods=['POST'])
+@cross_origin()
 def pause():
     print('Got a request to pause/resume')
-    q.put((RequestTypes.pause_resume, ))
+    q.put((RequestTypes.pause_resume, ''))
     return "sent"
 
 def app_runner(q: Queue):
