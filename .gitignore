@@ -1,1 +1,3 @@
-tmp.json*.pyc
+tmp.json
+*.pyc
+./lib/__pycache__/
