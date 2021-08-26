@@ -55,6 +55,8 @@ def axidraw_runner(data, pause_event):
     exit_cleanly()
 
 def draw_request(data):
+    print(data)
+    return
     global axi_thread
 
     # if a thread is already running then we don't want to

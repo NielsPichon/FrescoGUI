@@ -27,7 +27,7 @@ function sendStopRequest() {
 
 function formatConfig() {
     return {
-        axidraw_options: {},
+        axidraw_options: axidraw_options,
         spline_res: currentSplineResolution,
         margin: currentMargin,
         optimize: optimize,

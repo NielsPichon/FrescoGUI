@@ -5,17 +5,32 @@ const formats = {
   a5: [148, 210],
 };
 
+axidraw_options = {
+  speed_pendown: 25,
+  speed_penup: 75,
+  accel: 75,
+  pen_pos_down: 40,
+  pen_pos_up: 60,
+  pen_rate_lower: 50,
+  pen_rate_raise: 75,
+  pen_delay_down: 0,
+  pen_delay_up: 0,
+  const_speed: false,
+  model: 2,
+  port: null,
+  port_config: 0,
+}
+
 let currentShapes = []; // shapes to draw
 let currentFormat = formats.a3; // current paper format
 let currentMargin = 0; // margin on each side of the canvas
 let currentAspectRatio = 1; // drawing aspect ratio
 let currentJSONData = null; // json data
 if (window.shapes) {
-  print('meh')
   currentJSONData = JSON.parse(window.shapes); // load data from window
 }
 let currentSplineResolution = 10; // resolution of the splines
-let optimize = true; // whether the drawing should be optimized before drawing
+let optimize = false; // whether the drawing should be optimized before drawing
 
 function setup() {
   let canvas = createCanvas(currentFormat[0] / currentFormat[1] * window.innerHeight, window.innerHeight);
