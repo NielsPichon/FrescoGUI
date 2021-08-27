@@ -71,6 +71,16 @@ function updateMargin(margin) {
 }
 
 /**
+ * Update the resolution with which the splines will be drawn.
+ * @param {number} resolution Number of subdivisions along a spline
+ */
+function updateResolution(resolution) {
+  currentSplineResolution = resolution;
+  updateShapes(currentShapes, currentFormat, currentMargin, currentAspectRatio);
+  redraw();
+}
+
+/**
  * Fit the shapes to the paper size
  * @param {Array<Fresco.Shape>} shapes 
  * @param {Array<number>} format 
@@ -96,6 +106,8 @@ function updateShapes(shapes, format, margin, aspectRatio) {
       point.x = (point.x - 0.5) * scale_X;
       point.y = -(point.y + 0.5) * scale_Y;
     });
+
+    shape.poligonize();
   });
 
   currentShapes = shapes;
