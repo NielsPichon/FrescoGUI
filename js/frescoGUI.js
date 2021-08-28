@@ -9,7 +9,7 @@ axidraw_options = {
   speed_pendown: 25,
   speed_penup: 75,
   accel: 75,
-  pen_pos_down: 40,
+  pen_pos_down: 17,
   pen_pos_up: 60,
   pen_rate_lower: 50,
   pen_rate_raise: 75,
@@ -22,8 +22,8 @@ axidraw_options = {
 }
 
 let currentShapes = []; // shapes to draw
-let currentFormat = formats.a4; // current paper format
-let currentMargin = 0; // margin on each side of the canvas
+let currentFormat = formats.a3; // current paper format
+let currentMargin = 30; // margin on each side of the canvas
 let currentAspectRatio = 1; // drawing aspect ratio
 let currentJSONData = null; // json data
 if (window.shapes) {
