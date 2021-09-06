@@ -72,6 +72,16 @@ function setCanvasColor(color) {
 }
 
 /**
+ * Changes the color of a layer
+ * @param {number} layerIdx index of the layer to set the color of
+ * @param {String} color hex code of the desired color 
+ */
+function setLayerColor(layerIdx, color) {
+  layerColors[layerIdx % layerColors.length] = color;
+  updateDrawing();
+}
+
+/**
  * Update the paper format and refresh the preview canvas
  * @param {Array<number>} format format in mm x mm
  */
