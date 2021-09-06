@@ -28,10 +28,13 @@ def axidraw_runner(data, pause_event):
     margin = global_config['margin']
     optimize = global_config['optimize']
     format = global_config['format']
+    activeLayers = global_config['layers']
 
     print(shapes)
 
     shapes, aspect_ratio = json_to_shapes(shapes)
+
+    shapes = [s for s in shapes if s.layer in activeLayers]
 
     # create the axidraw handler and set the resolution
     ax = Axifresco(config, resolution=spline_res,

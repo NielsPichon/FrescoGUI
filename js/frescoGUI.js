@@ -1,3 +1,12 @@
+// layer colors
+layerColors = [
+  '3a86ff',
+  'ffbe0b',
+  'fb5607',
+  'ff006e',
+  '8338ec',
+]
+
 // helper for the various default formats
 const formats = {
   a3: [297, 420],
@@ -31,6 +40,10 @@ if (window.shapes) {
 }
 let currentSplineResolution = 10; // resolution of the splines
 let optimize = false; // whether the drawing should be optimized before drawing
+let canvasColor = [0, 0, 0];
+let currentLastLayer = 0;
+let selectedLayers = [0];
+
 
 function setup() {
   let canvas = createCanvas(currentFormat[0] / currentFormat[1] * window.innerHeight, window.innerHeight);
@@ -38,7 +51,7 @@ function setup() {
   canvas.parent('sketch-holder');
 
   // load the drawing in the default path if it exists
-  updateDrawing();
+  updateDrawing(true);
 
   // prevent drawing continuously
   noLoop();
@@ -46,8 +59,16 @@ function setup() {
 
 
 function draw() {
-  background(0);
+  background(canvasColor);
   currentShapes.forEach(s => s.draw());
+}
+
+/**
+ * Set the canvas/ paper color for preview
+ * @param {String} color # hex code of the color 
+ */
+function setCanvasColor(color) {
+  canvasColor = colorFromHex(color);
 }
 
 /**
@@ -80,6 +101,18 @@ function updateResolution(resolution) {
   redraw();
 }
 
+function toggleLayer(layerIdx) {
+  let occurence = array.indexOf(layerIdx)
+  if (occurence > -1) {
+    selectedLayers.splice(occurence, 1);
+  }
+  else {
+    selectedLayers.push(layerIdx);
+  }
+
+  updateDrawing();
+}
+
 /**
  * Fit the shapes to the paper size
  * @param {Array<Fresco.Shape>} shapes 
@@ -110,13 +143,25 @@ function updateShapes(shapes, format, margin, aspectRatio) {
     shape.poligonize();
   });
 
-  currentShapes = shapes;
+  // set shapes color
+  shapes.forEach(s => {
+    s.setColor(colorFromHex(layerColors[s.layer % layerColors.length]))
+  })
+
+  // filter out shapes that are not on a selected layer
+  // and store as current shapes
+  currentShapes = [];
+  shapes.forEach(s => {
+    if (selectedLayers.includes(s.layer)) {
+      currentShapes.push(s);
+    }
+  })
 }
 
 /**
  * Update the shapes based on the current json data and draws them
  */
-function updateDrawing() {
+function updateDrawing(initLayers=false) {
   
   if (currentJSONData) {
     if ("shapes" in currentJSONData) {
@@ -131,7 +176,20 @@ function updateDrawing() {
     currentJSONData['shapes'].forEach(shape => {
       shapes.push(shapeFromJSON(shape, false));
     })
-    
+
+    if (initLayers) {
+      // compute the number of layers
+      currentLastLayer = 0;
+      shapes.forEach(s => {
+        if (s.layer > currentLastLayer) {
+          currentLastLayer = s.layer;
+        }
+      });
+
+      // init all layers as selected
+      selectedLayers = [...Array(currentLastLayer + 1).keys()];
+    }
+
     // extract aspect ratio
     currentAspectRatio = currentJSONData['shapes'][0]['canvas_width'] / currentJSONData['shapes'][0]['canvas_height'];
     
@@ -156,7 +214,7 @@ function loadDrawing(filepath) {
       // Parsing JSON string into object
       console.log('response', response);
       currentJSONData = response;
-      updateDrawing();
+      updateDrawing(true);
   });
 }
 

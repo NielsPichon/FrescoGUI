@@ -38,5 +38,6 @@ function formatConfig() {
         margin: currentMargin,
         optimize: optimize,
         format: {x: currentFormat[0], y: currentFormat[1]},
+        layers: selectedLayers
     }
 }
