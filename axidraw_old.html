@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en">
+    <head>
+        <title>Fresco+Axidraw</title>
+        <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="p5.Fresco/js/shape.js"></script>
+        <script src="p5.Fresco/js/noise.js"></script>
+        <script src="p5.Fresco/js/particles.js"></script>
+        <script src="p5.Fresco/js/utils.js"></script>
+        <script src="p5.Fresco/js/futural.js"></script>
+        <script src="p5.Fresco/js/fonts.js"></script>
+        <script src="js/frescoGUI.js"></script>
+        <script src="js/comm.js"></script>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <div class="columnBox left" id="sketch-column">
+            <div class="sketch">
+                <div id="sketch-holder"></div>
+            </div>
+        </div>
+        <div class="columnBox" id="options">
+            <div class="statusBar">
+                <div class="playback">
+                    <button class="playbackIcon" id="play" onclick="sendDrawRequest()">
+                        <p>▶︁</p>
+                    </button>
+                    <button class="playbackIcon" id="pause" onclick="sendPauseResumeRequest()">
+                        <p>⏸︁</p>
+                    </button>
+                    <button class="playbackIcon" id="stop" onclick="sendStopRequest()">
+                        <p>⏹︁</p>
+                    </button>
+                </div>
+                <p class='status'>This is the current status of the axidraw.</p>
+            </div>            
+            <div class="columnBox" id="file-options">
+
+            </div>
+            <div class="columnBox" id="axidraw-options">
+                
+            </div>
+        </div>
+    </body>
+</html>

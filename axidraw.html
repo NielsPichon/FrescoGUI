@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <title>Fresco+Axidraw</title>
         <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.min.js"></script>
@@ -12,35 +13,80 @@
         <script src="p5.Fresco/js/fonts.js"></script>
         <script src="js/frescoGUI.js"></script>
         <script src="js/comm.js"></script>
+        <script src="https://kit.fontawesome.com/65f4948284.js" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet"> 
         <meta charset="utf-8">
     </head>
-    <body>
-        <div class="columnBox left" id="sketch-column">
-            <div class="sketch">
-                <div id="sketch-holder"></div>
+    <body class='Light-Theme'>
+        <div class='settingsCol'>
+            <div class='heading'>
+                <h1>Fresco GUI</h1>
+            </div>
+            <div class='card'></div>
+            <div class='otherSettings'>
+                <div class='leftCol'>
+                    <div class='card'>
+                        <h2>Axidraw Settings</h2>
+                        <div class="options">
+                            <div class="optionPercent">
+                                <h3>Writing/Drawing speed (%)</h3>
+                                <div class='percentBox'>
+                                    <i class="fas fa-minus sign"></i>
+                                    <input type='text' value='30'>
+                                    <i class="fas fa-plus sign"></i>
+                                </div>
+                            </div>
+                            <div class="optionPercent">
+                                <h3>Pen-up movement speed (%)</h3>
+                                <div class='percentBox'>
+                                    <i class="fas fa-minus sign"></i>
+                                    <input type='text' value='30'>
+                                    <i class="fas fa-plus sign"></i>
+                                </div>
+                            </div>
+                            <div class="optionPercent">
+                                <h3>Acceleration</h3>
+                                <div class='percentBox'>
+                                    <i class="fas fa-minus sign"></i>
+                                    <input type='text' value='30'>
+                                    <i class="fas fa-plus sign"></i>
+                                </div>
+                            </div>
+                            <div class="optionPercent">
+                                <h3>Pen height when UP (%)</h3>
+                                <div class='percentBox'>
+                                    <i class="fas fa-minus sign"></i>
+                                    <input type='text' value='30'>
+                                    <i class="fas fa-plus sign"></i>
+                                </div>
+                            </div>
+                            <div class="optionPercent">
+                                <h3>Pen height when DOWN (%)</h3>
+                                <div class='percentBox'>
+                                    <i class="fas fa-minus sign"></i>
+                                    <input type='text' value='30'>
+                                    <i class="fas fa-plus sign"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='card'>
+                        <h2>Advanced Settings</h2>
+                        <div class='optionPercent'>
+                            <h3>Model</h3>
+                            <select name='model' id='name'>
+                                <option value='AxiDraw V3/A3'>AxiDraw V3/A3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class='rightCol'>
+                </div>
             </div>
         </div>
-        <div class="columnBox" id="options">
-            <div class="statusBar">
-                <div class="playback">
-                    <button class="playbackIcon" id="play" onclick="sendDrawRequest()">
-                        <p>▶︁</p>
-                    </button>
-                    <button class="playbackIcon" id="pause" onclick="sendPauseResumeRequest()">
-                        <p>⏸︁</p>
-                    </button>
-                    <button class="playbackIcon" id="stop" onclick="sendStopRequest()">
-                        <p>⏹︁</p>
-                    </button>
-                </div>
-                <p class='status'>This is the current status of the axidraw.</p>
-            </div>            
-            <div class="columnBox" id="file-options">
-
-            </div>
-            <div class="columnBox" id="axidraw-options">
-                
-            </div>
+        <div class="previewCol">
         </div>
     </body>
 </html>
