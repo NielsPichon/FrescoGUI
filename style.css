@@ -21,6 +21,8 @@ body {
 
     width: 100%;
     height: 100vh;
+
+    background-color: var(--med-gray);
 }
 
 canvas {
@@ -69,11 +71,14 @@ ul {
     display: flex;
     flex-direction: row;
     padding: 0px;
+    align-self: center;
 
     width: 1440px;
 
     /* White */
     background: var(--White);
+
+    box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.02);
 }
 
 .settingsCol {
@@ -330,7 +335,7 @@ label:hover{
     height: 24px;
 
     /* Medium Grey */
-    background: var(--med-gray);
+    /* background: var(--med-gray); */
     color: var(--Blue);
     border-radius: 24px;
 
@@ -367,8 +372,7 @@ label:hover{
     padding: 8px 24px;
 
     /* Green */
-    border-radius: 4px;
-    color: var(--White);
+    border-radius: 24px;
     border: 2px solid var(--Green);
 
 
@@ -379,25 +383,27 @@ label:hover{
     margin: 10px 0px;
 
     transition: 0.3s;
-    box-shadow: inset 152px 0 0 0 var(--Green);
 
     font-size: 16px;
     line-height: 24px;
+    border: 2px solid var(--Green);
+    color: var(--Green);
+
+    background: none;
 }
 
 .exportBttn:hover{
     cursor: pointer;
-    border: 2px solid var(--Green);
     box-shadow: none;
-    color: var(--Green);
     background: none;
-    font-weight: 600;
+    color: var(--White);
+    box-shadow: inset 0px 0 0 35px var(--Green);
 }
 
 .buttonText {
     font-family: Fira Sans;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
 
     /* Inside Auto Layout */
     flex: none;
@@ -535,7 +541,7 @@ label:hover{
     flex: none;
     align-self: stretch;
     flex-grow: 0;
-    margin: 20px 0px;
+    /* margin: 20px 0px; */
 }
 
 .actionButton {
@@ -545,8 +551,8 @@ label:hover{
     width:48px;
     height: 48px;
 
-    background-color: var(--Blue);
-    color: var(--White);
+    background-color: var(--med-gray);
+    color: var(--Blue);
 
     /* Auto Layout */
     display: flex;
@@ -562,6 +568,8 @@ label:hover{
 
     font-size: 16px;
     margin-right: 8px;
+
+    transition: 0.35s;
 }
 
 .actionButton:last-child{
@@ -570,6 +578,8 @@ label:hover{
 
 .actionButton:hover {
     cursor: pointer;
+    box-shadow: inset 0 0 0 35px var(--Blue);
+    color: var(--White);
 }
 
 .actionButton.secondary {
@@ -577,7 +587,17 @@ label:hover{
     background-color: var(--med-gray);
 }
 
+.actionButton.secondary:hover {
+    box-shadow: inset 0 0 0 35px var(--Black);
+    color: var(--White);
+}
+
 .actionButton.stop {
     color: var(--Red);
     background-color: var(--light-red);
+}
+
+.actionButton.stop:hover {
+    box-shadow: inset 0 0 0 35px var(--Red);
+    color: var(--White);
 }
