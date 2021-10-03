@@ -148,13 +148,11 @@ ul {
     /* Auto Layout */
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-self: stretch;
+    justify-content: space-between;
     padding: 0px;
 
     /* Inside Auto Layout */
-    flex: none;
-    order: 1;
-    align-self: stretch;
     flex-grow: 1;
     margin-left: 24px;
 }
@@ -352,15 +350,12 @@ label:hover{
 .export {
     /* Auto Layout */
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    align-self: flex-end;
     padding: 0px;
 
     /* Inside Auto Layout */
-    flex: none;
-    align-self: stretch;
     flex-grow: 0;
-    margin: 24px 0px;
+    margin: 24px 0 0 0;
 }
 
 .exportBttn {
