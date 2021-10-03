@@ -40,13 +40,13 @@ if (window.shapes) {
 }
 let currentSplineResolution = 10; // resolution of the splines
 let optimize = false; // whether the drawing should be optimized before drawing
-let canvasColor = [0, 0, 0];
+let canvasColor = '263440';
 let currentLastLayer = 0;
 let selectedLayers = [0];
 
 
 function setup() {
-  let canvas = createCanvas(currentFormat[0] / currentFormat[1] * window.innerHeight, window.innerHeight);
+  let canvas = createCanvas(490, currentFormat[1] / currentFormat[0] * 490);
   // Move the canvas so it’s inside our <div id="sketch-holder">.
   canvas.parent('sketch-holder');
 
@@ -59,7 +59,7 @@ function setup() {
 
 
 function draw() {
-  background(canvasColor);
+  background(colorFromHex(canvasColor));
   currentShapes.forEach(s => s.draw());
 }
 

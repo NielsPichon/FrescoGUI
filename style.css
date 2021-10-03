@@ -2,25 +2,29 @@
 :root {
     --light-gray: #F7FAFD;
     --med-gray: #E9EFF5;
-    --background-col: #ffffff;
-    --black: #3a4d5f;
-    --blue: #2B8EFC;
+    --White: #ffffff;
+    --Black: #3a4d5f;
+    --Blue: #2B8EFC;
     --main-font: 'Fira Sans', sans-serif;
+    --dark-gray: #9FB3C5;
+    --Green: #46CB3A;
+    --dark-theme: #263440;
+    --Red: #FA274B;
+    --light-red: #F8E3EA;
 }
 
 body {
-    /* Auto Layout */
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    padding: 0px;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
 
-    position: relative;
-    width: 1440px;
-    height: 840px;
+    width: 100%;
+    height: 100vh;
+}
 
-    /* White */
-    background: var(--background-col);
+canvas {
+    border-radius: 8px;
 }
 
 h1 {
@@ -30,7 +34,7 @@ h1 {
     font-size: 24px;
     line-height: 32px;
 
-    color: var(--black);
+    color: var(--Black);
 }
 
 h2 {
@@ -40,18 +44,36 @@ h2 {
     font-size: 16px;
     line-height: 24px;
 
-    color: var(--black);
+    color: var(--Black);
 }
 
-h3 {
+p {
     font-family: Fira Sans;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
     line-height: 22px;
-    
+
     /* Black */
-    color: var(--black);
+    color: var(--Black);
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.main {
+    display: flex;
+    flex-direction: row;
+    padding: 0px;
+
+    width: 1440px;
+
+    /* White */
+    background: var(--White);
 }
 
 .settingsCol {
@@ -61,35 +83,32 @@ h3 {
     align-items: flex-start;
     padding: 32px 40px 40px;
 
-    /* Light Grey */
-    background: var(--light-gray);
+    /* width: 870px; */
 
     /* Inside Auto Layout */
     flex: none;
-    order: 0;
-    align-self: stretch;
     flex-grow: 1;
     margin: 0px 0px;
+
+    /* Light Grey */
+    background: var(--light-gray);
+
 }
 
 .previewCol {
-    /* Auto Layout */
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     padding: 20px 40px 40px;
-
-    position: static;
-    width: 570px;
-    height: 840px;
-    left: 870px;
-    top: 0px;
-
+    
+    /* width: 570px; */
+    
     /* Inside Auto Layout */
     flex: none;
-    order: 1;
     flex-grow: 0;
     margin: 0px 0px;
+
+    background: var(--White);
 }
 
 .otherSettings {
@@ -107,7 +126,7 @@ h3 {
     margin: 24px 0px;
 }
 
-.leftCol.otherSettings {
+.leftCol {
     /* Auto Layout */
     display: flex;
     flex-direction: column;
@@ -118,10 +137,9 @@ h3 {
     flex: none;
     order: 0;
     flex-grow: 1;
-    margin: 0px 24px;
 }
 
-.rightCol.otherSettings {
+.rightCol {
     /* Auto Layout */
     display: flex;
     flex-direction: column;
@@ -133,7 +151,7 @@ h3 {
     order: 1;
     align-self: stretch;
     flex-grow: 1;
-    margin: 0px 24px;
+    margin-left: 24px;
 }
 
 .card {
@@ -144,18 +162,17 @@ h3 {
     padding: 16px;
 
     /* White */
-    background: var(--background-col);
+    background: var(--White);
     border-radius: 8px;
 
     /* Inside Auto Layout */
     flex: none;
-    order: 1;
     align-self: stretch;
     flex-grow: 0;
-    margin: 24px 0px;    
+    margin: 12px 0px;
 }
 
-.card.options {
+.options {
     /* Auto Layout */
     display: flex;
     flex-direction: column;
@@ -167,7 +184,6 @@ h3 {
     order: 1;
     align-self: stretch;
     flex-grow: 0;
-    margin: 16px 0px;
 }
 
 .optionPercent {
@@ -181,7 +197,6 @@ h3 {
     flex: none;
     order: 4;
     flex-grow: 0;
-    margin: 16px 0px;    
 }
 
 .percentBox {
@@ -193,7 +208,7 @@ h3 {
     padding: 8px;
 
     /* White */
-    background: var(--background-col);
+    background: var(--White);
 
     /* Medium Grey */
     border: 1px solid var(--med-gray);
@@ -209,12 +224,16 @@ h3 {
 
 .sign {
     /* Blue */
-    color: var(--blue);
+    color: var(--Blue);
 
     /* Inside Auto Layout */
     flex: none;
     flex-grow: 0;
     margin: 0px 10px;
+}
+
+.sign:hover {
+    cursor: pointer;
 }
 
 input {
@@ -224,7 +243,7 @@ input {
     font-size: 16px;
     line-height: 16px;
 
-    color: var(--black);
+    color: var(--Black);
 
     /* Inside Auto Layout */
     width: 20px;
@@ -244,7 +263,7 @@ select {
     padding: 8px 16px;
 
     /* White */
-    background: var(--background-col);
+    background: var(--White);
 
     /* Medium Grey */
     border: 1px solid var(--med-gray);
@@ -262,6 +281,303 @@ select {
     font-weight: normal;
     font-size: 16px;
     line-height: 16px;
+
+    color: var(--Black);
+}
+
+select:hover {
+    cursor: pointer;
+}
+
+label {
+    font-family: Fira Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+
+    /* Black */
+    color: var(--Black);
+}
+
+label:hover{
+    cursor: pointer;
+}
+
+.applyAll {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    justify-content: space-between;
+
+    /* Inside Auto Layout */
+    flex: none;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.eyecon {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+
+    width: 24px;
+    height: 24px;
+
+    /* Medium Grey */
+    background: var(--med-gray);
+    color: var(--Blue);
+    border-radius: 24px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;
+}
+
+.eyecon:hover {
+    cursor: pointer;
+    color: var(--dark-gray);
+}
+
+.export {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    align-self: stretch;
+    flex-grow: 0;
+    margin: 24px 0px;
+}
+
+.exportBttn {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 24px;
+
+    /* Green */
+    border-radius: 4px;
+    color: var(--White);
+    border: 2px solid var(--Green);
+
+
+    /* Inside Auto Layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 10px 0px;
+
+    transition: 0.3s;
+    box-shadow: inset 152px 0 0 0 var(--Green);
+
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.exportBttn:hover{
+    cursor: pointer;
+    border: 2px solid var(--Green);
+    box-shadow: none;
+    color: var(--Green);
+    background: none;
+    font-weight: 600;
+}
+
+.buttonText {
+    font-family: Fira Sans;
+    font-style: normal;
+    font-weight: 500;
+
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;
+    margin: 0px 8px;
+}
+
+.buttonIcon {
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;
+}
+
+
+.previewCanvas {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* Medium Grey */
+    border: 1px solid var(--med-gray);
+    box-sizing: border-box;
+    border-radius: 8px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin: 20px 0px;
+}
+
+.layerCard {
+    align-self: stretch;
+}
+
+.layersList {
+    overflow-y: scroll;
+
+    /* Auto Layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    align-self: stretch;
+    flex-grow: 1;
+    margin: 16px 0px;
     
-    color: var(--black);
+    scrollbar-width: 4px;
+    scrollbar-color: var(--dark-gray) var(--light-gray);
+    direction: rtl;
+}
+
+.layersList::-webkit-scrollbar {
+    width: 8px;
+}
+
+.layersList::-webkit-scrollbar-track {
+    background: var(--med-gray);
+    border-radius: 20px;
+}
+
+.layersList::-webkit-scrollbar-thumb {
+    background: var(--dark-gray);
+    border-radius: 20px;
+    border: none;
+}
+
+.layer {
+    direction: ltr;
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    align-self: stretch;
+    flex-grow: 0;
+
+    margin-left: 16px;
+
+    border-bottom: 1px solid var(--med-gray);
+}
+
+.colorPicker {
+    background-color: salmon;
+    border: none;
+    border-radius: 8px;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+.colorPicker:hover {
+    cursor: pointer;
+}
+
+.layerLeft {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    /* margin: 0px 40px; */
+}
+
+.tickbox {
+    margin: 0;
+    margin-right: 8px;
+}
+
+.tickbox:hover{
+    cursor: pointer;
+}
+
+.controlPanel {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    align-self: stretch;
+    flex-grow: 0;
+    margin: 20px 0px;
+}
+
+.actionButton {
+    border: none;
+    padding: 24px;
+    
+    width:48px;
+    height: 48px;
+
+    background-color: var(--Blue);
+    color: var(--White);
+
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 24px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;
+
+    font-size: 16px;
+    margin-right: 8px;
+}
+
+.actionButton:last-child{
+    margin-right: 0;
+}
+
+.actionButton:hover {
+    cursor: pointer;
+}
+
+.actionButton.secondary {
+    color: var(--Black);
+    background-color: var(--med-gray);
+}
+
+.actionButton.stop {
+    color: var(--Red);
+    background-color: var(--light-red);
 }
