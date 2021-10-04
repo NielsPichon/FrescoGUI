@@ -19,7 +19,7 @@ body {
     margin: 0;
     padding: 0;
 
-    width: 100%;
+    width: 100vw;
     height: 100vh;
 
     background-color: var(--med-gray);
@@ -86,7 +86,7 @@ ul {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 32px 40px 40px;
+    padding: 32px 40px 30px;
 
     /* width: 870px; */
 
@@ -128,7 +128,7 @@ ul {
     order: 2;
     align-self: stretch;
     flex-grow: 0;
-    margin: 24px 0px;
+    /* margin: 24px 0px; */
 }
 
 .leftCol {
@@ -172,7 +172,11 @@ ul {
     flex: none;
     align-self: stretch;
     flex-grow: 0;
-    margin: 12px 0px;
+    margin-bottom: 24px;
+}
+
+.card:last-child {
+    margin-bottom: 0;
 }
 
 .options {
@@ -752,7 +756,7 @@ label:hover{
     flex: none;
     align-self: stretch;
     flex-grow: 0;
-    margin: 16px 0px;
+    /* margin: 16px 0px; */
 }
 
 .marginCross {
@@ -765,13 +769,12 @@ label:hover{
     /* Inside Auto Layout */
     flex: none;
     flex-grow: 0;
-    margin: 16px 0px;
 }
 
 .crossRow {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex;
     justify-content: center;
     padding: 0px;
 
@@ -836,4 +839,129 @@ label:hover{
 
 .link:hover {
     color: var(--med-gray);
+}
+
+.drawRightCol {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 1;
+}
+
+.splineRes {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    align-self: stretch;
+    flex-grow: 0;
+    margin-bottom: 40px;
+}
+
+.optimize {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;
+}
+
+
+.sliderContainer {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.rangeFigRow{
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.rangeFig {
+    font-family: Fira Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+    
+    color: var(--dark-gray);
+    
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;
+}
+
+.slider {
+    width: 344px;
+    height: 6px;
+
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin: 0px 0px;
+
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--med-gray);
+    outline: none;
+
+    border-radius: 3px;
+
+    border: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px; 
+    height: 20px; 
+    border-radius: 24px;
+    background: var(--Blue);
+    cursor: pointer;
+    border: none;
+}
+
+.slider::-moz-range-thumb {
+    width: 20px; /* Set a specific slider handle width */
+    height: 20px; /* Slider handle height */
+    background: var(--Blue); /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 24px;
+    border: none;
+}
+
+.slider::-moz-range-progress {
+    background-color: var(--Blue);
+    height: 6px;
+    border-radius: 3px;
 }
