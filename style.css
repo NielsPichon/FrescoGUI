@@ -359,7 +359,7 @@ label:hover{
 
     /* Inside Auto Layout */
     flex-grow: 0;
-    margin: 24px 0 0 0;
+    /* margin: 24px 0 0 0; */
 }
 
 .exportBttn {
@@ -379,7 +379,6 @@ label:hover{
     flex: none;
     order: 0;
     flex-grow: 0;
-    margin: 10px 0px;
 
     transition: 0.3s;
 
@@ -438,6 +437,7 @@ label:hover{
 
 .layerCard {
     align-self: stretch;
+    max-height: 360px;
 }
 
 .layersList {
