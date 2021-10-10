@@ -60,6 +60,10 @@ p {
     color: var(--Black);
 }
 
+p.disabled {
+    color: var(--dark-gray);
+}
+
 ul {
     list-style-type: none;
     padding: 0;
@@ -346,7 +350,33 @@ label:hover{
     flex-grow: 0;
 }
 
+.eyecon-disabled {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+
+    width: 24px;
+    height: 24px;
+
+    /* Medium Grey */
+    /* background: var(--med-gray); */
+    color: var(--med-gray);
+    border-radius: 24px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;
+}
+
 .eyecon:hover {
+    cursor: pointer;
+    color: var(--dark-gray);
+}
+
+.eyecon-disabled:hover {
     cursor: pointer;
     color: var(--dark-gray);
 }

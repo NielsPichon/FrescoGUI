@@ -101,160 +101,19 @@
                     <div class='leftCol'>
                         <div class='card'>
                             <h2>Axidraw Settings</h2>
-                            <div class="options">
-                                <div class="optionPercent">
-                                    <p>Writing/Drawing speed (%)</p>
-                                    <div class='percentBox'>
-                                        <i class="fas fa-minus sign"></i>
-                                        <input type='text' value='30'>
-                                        <i class="fas fa-plus sign"></i>
-                                    </div>
-                                </div>
-                                <div class="optionPercent">
-                                    <p>Pen-up movement speed (%)</p>
-                                    <div class='percentBox'>
-                                        <i class="fas fa-minus sign"></i>
-                                        <input type='text' value='30'>
-                                        <i class="fas fa-plus sign"></i>
-                                    </div>
-                                </div>
-                                <div class="optionPercent">
-                                    <p>Acceleration</p>
-                                    <select name='model' id='name'>
-                                        <option value='AxiDraw V3/A3'>AxiDraw V3/A3</option>
-                                        <option value='AxiDraw V2/V3'>AxiDraw V2/V3</option>
-                                        <option value='AxiDraw SE/A3'>AxiDraw SE/A3</option>
-                                        <option value='AxiDraw V3 XLX'>AxiDraw V3 XLX</option>
-                                        <option value='AxiDraw Minikit'>AxiDraw Minikit</option>
-                                    </select>
-                                </div>
-                                <div class="optionPercent">
-                                    <p>Pen height when UP (%)</p>
-                                    <div class='percentBox'>
-                                        <i class="fas fa-minus sign"></i>
-                                        <input type='text' value='30'>
-                                        <i class="fas fa-plus sign"></i>
-                                    </div>
-                                </div>
-                                <div class="optionPercent">
-                                    <p>Pen height when DOWN (%)</p>
-                                    <div class='percentBox'>
-                                        <i class="fas fa-minus sign"></i>
-                                        <input type='text' value='30'>
-                                        <i class="fas fa-plus sign"></i>
-                                    </div>
-                                </div>
+                            <div class="options" id='axidraw-settings'>
+                                <script src='js/axidrawOptions.js'></script>
                             </div>
                         </div>
-                        <div class='card'>
+                        <div class='card' id='advanced-options'>
                             <h2>Advanced Settings</h2>
-                            <div class='optionPercent'>
-                                <p>Model</p>
-                                <select name='model' id='name'>
-                                    <option value='AxiDraw V3/A3'>AxiDraw V3/A3</option>
-                                    <option value='AxiDraw V2/V3'>AxiDraw V2/V3</option>
-                                    <option value='AxiDraw SE/A3'>AxiDraw SE/A3</option>
-                                    <option value='AxiDraw V3 XLX'>AxiDraw V3 XLX</option>
-                                    <option value='AxiDraw Minikit'>AxiDraw Minikit</option>
-                                </select>
-                            </div>
+                            <script src='js/advancedOptions.js'></script>
                         </div>
                     </div>
                     <div class='rightCol'>
-                        <div class='card layerCard'>
+                        <div class='card layerCard' id='layer-settings'>
                             <h2>Layers</h2>
-                            <div class='applyAll'>
-                                <div class='color'>
-                                    <input class='tickbox' type='checkbox' id='colorCheckbox'>
-                                    <label for='colorCheckbox'>Apply color to all layers</label>
-                                </div>
-                                <div class='eyecon'>
-                                    <i class="fas fa-eye"></i>
-                                </div>
-                            </div>
-                            <ul class='layersList'>
-                                <li class='layer'>
-                                    <div class='layerLeft'>
-                                        <button class='colorPicker'></button>
-                                        <p>Layer 1</p>
-                                    </div>
-                                    <div class='eyecon'>
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </li>
-                                <li class='layer'>
-                                    <div class='layerLeft'>
-                                        <button class='colorPicker'></button>
-                                        <p>Layer 1</p>
-                                    </div>
-                                    <div class='eyecon'>
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </li>
-                                <li class='layer'>
-                                    <div class='layerLeft'>
-                                        <button class='colorPicker'></button>
-                                        <p>Layer 1</p>
-                                    </div>
-                                    <div class='eyecon'>
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </li>
-                                <li class='layer'>
-                                    <div class='layerLeft'>
-                                        <button class='colorPicker'></button>
-                                        <p>Layer 1</p>
-                                    </div>
-                                    <div class='eyecon'>
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </li>
-                                <li class='layer'>
-                                    <div class='layerLeft'>
-                                        <button class='colorPicker'></button>
-                                        <p>Layer 1</p>
-                                    </div>
-                                    <div class='eyecon'>
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </li>
-                                <li class='layer'>
-                                    <div class='layerLeft'>
-                                        <button class='colorPicker'></button>
-                                        <p>Layer 1</p>
-                                    </div>
-                                    <div class='eyecon'>
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </li>
-                                <li class='layer'>
-                                    <div class='layerLeft'>
-                                        <button class='colorPicker'></button>
-                                        <p>Layer 1</p>
-                                    </div>
-                                    <div class='eyecon'>
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </li>
-                                <li class='layer'>
-                                    <div class='layerLeft'>
-                                        <button class='colorPicker'></button>
-                                        <p>Layer 1</p>
-                                    </div>
-                                    <div class='eyecon'>
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </li>
-                                <li class='layer'>
-                                    <div class='layerLeft'>
-                                        <button class='colorPicker'></button>
-                                        <p>Layer 1</p>
-                                    </div>
-                                    <div class='eyecon'>
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </li>
-                            </ul>
+                            <script src="js/layers.js"></script>
                         </div>
                         <div class='export'>
                             <button class='exportBttn'>
@@ -283,5 +142,6 @@
                 <div class='previewCanvas' id="sketch-holder"></div>
             </div>
         </div>
+        <script src='js/index.js'></script>
     </body>
 </html>

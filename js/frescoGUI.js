@@ -1,12 +1,3 @@
-// layer colors
-layerColors = [
-  '3a86ff',
-  'ffbe0b',
-  'fb5607',
-  'ff006e',
-  '8338ec',
-]
-
 // helper for the various default formats
 const formats = {
   a3: [297, 420],
@@ -30,6 +21,10 @@ axidraw_options = {
   port_config: 0,
 }
 
+let darkTheme = false;
+const black = '263440';
+let canvasColor = black;
+
 let currentShapes = []; // shapes to draw
 let currentFormat = formats.a3; // current paper format
 let currentMargin = 30; // margin on each side of the canvas
@@ -40,7 +35,6 @@ if (window.shapes) {
 }
 let currentSplineResolution = 10; // resolution of the splines
 let optimize = false; // whether the drawing should be optimized before drawing
-let canvasColor = '263440';
 let currentLastLayer = 0;
 let selectedLayers = [0];
 
@@ -109,18 +103,6 @@ function updateResolution(resolution) {
   currentSplineResolution = resolution;
   updateShapes(currentShapes, currentFormat, currentMargin, currentAspectRatio);
   redraw();
-}
-
-function toggleLayer(layerIdx) {
-  let occurence = array.indexOf(layerIdx)
-  if (occurence > -1) {
-    selectedLayers.splice(occurence, 1);
-  }
-  else {
-    selectedLayers.push(layerIdx);
-  }
-
-  updateDrawing();
 }
 
 /**
@@ -198,6 +180,7 @@ function updateDrawing(initLayers=false) {
 
       // init all layers as selected
       selectedLayers = [...Array(currentLastLayer + 1).keys()];
+      layers = [...Array(currentLastLayer + 1).keys()];
     }
 
     // extract aspect ratio
