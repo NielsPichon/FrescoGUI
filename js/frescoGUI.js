@@ -33,6 +33,9 @@ let currentJSONData = null; // json data
 if (window.shapes) {
   currentJSONData = JSON.parse(window.shapes); // load data from window
 }
+else {
+  currentJSONData = JSON.parse(defaultShape);
+}
 let currentSplineResolution = 10; // resolution of the splines
 let optimize = false; // whether the drawing should be optimized before drawing
 let currentLastLayer = 0;
@@ -45,12 +48,11 @@ function setup() {
   canvas.parent('sketch-holder');
 
   // load the drawing in the default path if it exists
-  updateDrawing(true);
+  updateDrawing(true, false);
 
   // prevent drawing continuously
   noLoop();
 }
-
 
 function draw() {
   background(colorFromHex(canvasColor));
@@ -70,9 +72,11 @@ function setCanvasColor(color) {
  * @param {number} layerIdx index of the layer to set the color of
  * @param {String} color hex code of the desired color 
  */
-function setLayerColor(layerIdx, color) {
+function setLayerColor(layerIdx, color, shouldRedraw=true) {
   layerColors[layerIdx % layerColors.length] = color;
-  updateDrawing();
+  if (shouldRedraw) {
+    updateDrawing();
+  }
 }
 
 /**
@@ -137,7 +141,11 @@ function updateShapes(shapes, format, margin, aspectRatio) {
 
   // set shapes color
   shapes.forEach(s => {
-    s.setColor(colorFromHex(layerColors[s.layer % layerColors.length]))
+    let nuColor = layerColors[s.layer % layerColors.length];
+    if (nuColor == null) {
+      nuColor = 'fff';
+    }
+    s.setColor(colorFromHex(nuColor))
   })
 
   // filter out shapes that are not on a selected layer
@@ -153,7 +161,7 @@ function updateShapes(shapes, format, margin, aspectRatio) {
 /**
  * Update the shapes based on the current json data and draws them
  */
-function updateDrawing(initLayers=false) {
+function updateDrawing(initLayers=false, shouldRedraw=true) {
   
   if (currentJSONData) {
     if ("shapes" in currentJSONData) {
@@ -194,7 +202,9 @@ function updateDrawing(initLayers=false) {
   }
 
   // redraw
-  redraw();
+  if (shouldRedraw) {
+    redraw();
+  }
 }
 
 /**

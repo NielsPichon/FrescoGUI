@@ -13,22 +13,20 @@ let globalColor = '#2B8EFC'
 
 let layerColors = [];
 
-function createEyecon(parent, callback) {
+function createEyecon(parent, idx, callback) {
     let div = document.createElement('div');
     div.className = 'eyecon';
+    div.id = 'eyecon-' + idx;
     parent.appendChild(div);
 
     let i = document.createElement('i');
     i.className = 'fas fa-eye';
+    i.id = 'icon-' + idx;
     i.onclick = () => {
         if (i.className == 'fas fa-eye') {
-            i.className = 'fas fa-eye-slash';
-            div.className = 'eyecon-disabled';
             callback(false);
         }
         else {
-            i.className = 'fas fa-eye';
-            div.className = 'eyecon';
             callback(true);
         }
     }
@@ -40,11 +38,15 @@ function toggleVisibility(visible, idx, update = true) {
     if (visible && layerIdx < 0) {
         document.getElementById('layer-name-' + idx).className = '';
         document.getElementById('layer-color-' + idx).style.backgroundColor = layerColors[idx];
+        document.getElementById('icon-' + idx).className = 'fas fa-eye';
+        document.getElementById('eyecon-' + idx).className = 'eyecon';
         selectedLayers.push(idx);
     }
     else if (layerIdx >= 0) {
         document.getElementById('layer-name-' + idx).className = 'disabled';
         document.getElementById('layer-color-' + idx).style.backgroundColor = '#9FB3C5';
+        document.getElementById('icon-' + idx).className = 'fas fa-eye-slash';
+        document.getElementById('eyecon-' + idx).className = 'eyecon-disabled';
         selectedLayers.splice(layerIdx, 1);
     }
 
@@ -54,6 +56,14 @@ function toggleVisibility(visible, idx, update = true) {
 }
 
 function toggleAllLayers(visible) {
+    if (visible) {
+        document.getElementById('icon-all').className = 'fas fa-eye';
+        document.getElementById('eyecon-all').className = 'eyecon';
+    }
+    else {
+        document.getElementById('icon-all').className = 'fas fa-eye-slash';
+        document.getElementById('eyecon-all').className = 'eyecon-disabled';
+    }
     let layers = [...Array(currentLastLayer + 1).keys()];
     layers.forEach(l => {
         toggleVisibility(visible, l, false)
@@ -91,7 +101,9 @@ function createLayer(parentId, idx) {
     left.appendChild(p);
 
     let callback = (visible => toggleVisibility(visible, idx));
-    createEyecon(li, callback);
+    createEyecon(li, idx, callback);
+
+    setLayerColor(idx, layerColors[idx], false);
 }
 
 function createApplyAll(parentId) {
@@ -127,11 +139,11 @@ function createApplyAll(parentId) {
     label.textContent = 'Apply color to all layers';
     clrDiv.appendChild(label);
 
-    createEyecon(div, toggleAllLayers);
+    createEyecon(div, 'all', toggleAllLayers);
 }
 
 function createLayerList() {
-    for (let i = 0; i < currentLastLayer; i++) {
+    for (let i = 0; i < currentLastLayer + 1; i++) {
         createLayer('layers-list', i);
     }
 }
@@ -144,3 +156,4 @@ ul.className = 'layersList';
 ul.id = 'layers-list';
 document.getElementById('layer-settings').appendChild(ul);
 createLayerList()
+updateDrawing()

@@ -13,19 +13,16 @@ function createPercentBox (parentId, text, defaultValue) {
 
     let callback = (v => {
         let nuVal = Math.min(100, Math.max(0, v));
-        console.log(v, nuVal);
         eval(defaultValue + '=' + nuVal);
         input.value = nuVal;
     });
 
     let plusCallback = () => {
         callback(parseInt(input.value) + 5);
-        console.log(axidraw_options.speed_penup)
     }
 
     let minusCallback = () => {
         callback(parseInt(input.value) - 5);
-        console.log(axidraw_options.speed_penup)
     }
 
     let minus = document.createElement('i');
@@ -36,6 +33,9 @@ function createPercentBox (parentId, text, defaultValue) {
     let input = document.createElement('input');
     input.type = 'text';
     eval('input.value = ' + defaultValue);
+    input.onchange = () => {
+        callback(parseInt(input.value));
+    }
     box.appendChild(input)
 
     let plus = document.createElement('i');
