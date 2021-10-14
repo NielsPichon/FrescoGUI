@@ -1094,12 +1094,14 @@ label:hover{
     content: "";
     height: 10px;
     width: 10px;
-    left: 4px;
-    bottom: 3.5px;
+    left: 3px;
+    bottom: 5px;
     background-color: var(--White);
     -webkit-transition: .35s;
     transition: .35s;
     border-radius: 50%;
+    content: '\f186';
+    color: var(--Black);
 }
 
 input:checked + .switchSlider {
@@ -1114,6 +1116,8 @@ input:checked + .switchSlider:before {
     -webkit-transform: translateX(16px);
     -ms-transform: translateX(16px);
     transform: translateX(16px);
+    content: '';
+    bottom: 3px;
 }
 
 .theme {
