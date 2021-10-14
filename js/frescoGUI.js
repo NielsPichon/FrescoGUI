@@ -101,6 +101,7 @@ function updateFormat(format) {
  * @param {number} resolution Number of subdivisions along a spline
  */
 function updateResolution(resolution) {
+  console.log('new res', resolution)
   currentSplineResolution = resolution;
   updateShapes(currentShapes, currentFormat, currentMargins, currentAspectRatio);
   redraw();

@@ -13,6 +13,7 @@
     --light-red: #F8E3EA;
 }
 
+
 body {
     display: flex;
     justify-content: center;
@@ -233,6 +234,12 @@ ul {
     margin: 0px 8px;
 }
 
+.percentBox:focus-within {
+    border-color: var(--Blue);
+}
+
+
+
 .sign {
     /* Blue */
     color: var(--Blue);
@@ -264,6 +271,14 @@ input {
 
     border-style: none;
 }
+input:focus {
+    outline: none !important;
+}
+input::selection {
+    background-color: var(--Blue);
+    color: var(--White);
+}
+
 
 select {
     /* Auto Layout */
@@ -550,12 +565,24 @@ label:hover{
 }
 
 .tickbox {
+    appearance: none;
+    border: 1px solid var(--dark-gray);
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
     margin: 0;
     margin-right: 8px;
+    transition-duration: 0.25s;
 }
 
 .tickbox:hover{
     cursor: pointer;
+}
+
+.tickbox:checked {
+    border-color: var(--Blue) !important;
+    box-shadow: 0px 0px 0px 2px var(--White) inset;
+    background-color: var(--Blue);
 }
 
 .controlPanel {
@@ -831,6 +858,10 @@ label:hover{
     border-radius: 4px;
 }
 
+.sizebox:focus-within {
+    border-color: var(--Blue);
+}
+
 .sizeboxText {   
     font-family: Fira Sans;
     font-style: normal;
@@ -848,6 +879,16 @@ label:hover{
     order: 0;
     flex-grow: 0;
     margin: 0px 10px;
+}
+
+.sizeboxText:focus {
+    outline: none !important;
+    
+}
+
+.sizeboxText::selection {
+    background-color: var(--Blue);
+    color: var(--White);
 }
 
 .link {
