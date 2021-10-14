@@ -9,7 +9,7 @@ const defaultLayerColors = [
 const darkGray = '#9FB3C5';
 const lightGray = '#F7FAFD';
 
-let globalColor = '#2B8EFC'
+let globalColor = '#2B8EFC';
 
 let layerColors = [];
 
@@ -33,7 +33,7 @@ function createEyecon(parent, idx, callback) {
     div.appendChild(i);
 }
 
-function toggleVisibility(visible, idx, update = true) {
+function toggleVisibility(visible, idx, update=true) {
     let layerIdx = selectedLayers.indexOf(idx)
     if (visible && layerIdx < 0) {
         document.getElementById('layer-name-' + idx).className = '';
@@ -41,6 +41,9 @@ function toggleVisibility(visible, idx, update = true) {
         document.getElementById('icon-' + idx).className = 'fas fa-eye';
         document.getElementById('eyecon-' + idx).className = 'eyecon';
         selectedLayers.push(idx);
+        if (update) {
+            toggleAllEyecon(true);
+        }
     }
     else if (layerIdx >= 0) {
         document.getElementById('layer-name-' + idx).className = 'disabled';
@@ -55,7 +58,7 @@ function toggleVisibility(visible, idx, update = true) {
     }
 }
 
-function toggleAllLayers(visible) {
+function toggleAllEyecon(visible) {
     if (visible) {
         document.getElementById('icon-all').className = 'fas fa-eye';
         document.getElementById('eyecon-all').className = 'eyecon';
@@ -64,6 +67,11 @@ function toggleAllLayers(visible) {
         document.getElementById('icon-all').className = 'fas fa-eye-slash';
         document.getElementById('eyecon-all').className = 'eyecon-disabled';
     }
+}
+
+
+function toggleAllLayers(visible) {
+    toggleAllEyecon(visible)
     let layers = [...Array(currentLastLayer + 1).keys()];
     layers.forEach(l => {
         toggleVisibility(visible, l, false)
@@ -71,13 +79,13 @@ function toggleAllLayers(visible) {
     updateDrawing();
 }
 
-function createColorPicker(parent, id, color, storeColor) {
+function createColorPickerObject(parent, id, clr, storeColor) {
     let colorPicker = document.createElement('button');
     colorPicker.className = 'colorPicker';
     colorPicker.id = id;
-    colorPicker.style.backgroundColor = color;
+    colorPicker.style.backgroundColor = clr;
     if (storeColor) {
-        layerColors.push(color);
+        layerColors.push(clr);
     }
     colorPicker.onclick = () => {console.log('color picker of layer ' + idx + ' clicked')}
     parent.appendChild(colorPicker);
@@ -93,7 +101,7 @@ function createLayer(parentId, idx) {
     left.className = 'layerLeft';
     li.appendChild(left);
 
-    createColorPicker(left, 'layer-color-' + idx, defaultLayerColors[idx % defaultLayerColors.length], true);
+    createColorPickerObject(left, 'layer-color-' + idx, defaultLayerColors[idx % defaultLayerColors.length], true);
 
     let p = document.createElement('p');
     p.id = 'layer-name-' + idx;
@@ -122,15 +130,15 @@ function createApplyAll(parentId) {
     clrDiv.appendChild(input);
 
     
-    createColorPicker(clrDiv, 'global-picker', globalColor, false);
-    document.getElementById('global-picker').style.visibility = 'hidden';
     
     input.onclick = () => {
         if (input.checked) {
-            document.getElementById('global-picker').style.visibility = 'visible';
+            createColorPickerObject(clrDiv, 'global-picker', globalColor, false);
+            clrPicker = document.getElementById('global-picker');
+            clrDiv.insertBefore(clrPicker, clrPicker.previousElementSibling);
         }
         else {
-            document.getElementById('global-picker').style.visibility = 'hidden';
+            document.getElementById('global-picker').remove();
         }
     }
 
@@ -149,11 +157,14 @@ function createLayerList() {
 }
 
 
-createApplyAll('layer-settings');
+function addLayers() {
+    createApplyAll('layer-settings');
+    let ul = document.createElement('ul');
+    ul.className = 'layersList';
+    ul.id = 'layers-list';
+    document.getElementById('layer-settings').appendChild(ul);
+    createLayerList();
+    updateDrawing();
+}
 
-let ul = document.createElement('ul');
-ul.className = 'layersList';
-ul.id = 'layers-list';
-document.getElementById('layer-settings').appendChild(ul);
-createLayerList()
-updateDrawing()
+

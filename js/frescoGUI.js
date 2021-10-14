@@ -50,6 +50,9 @@ function setup() {
   // load the drawing in the default path if it exists
   updateDrawing(true, false);
 
+  // add the layers to the ui now as they need to first have the drawing data parsed to exist
+  addLayers()
+
   // prevent drawing continuously
   noLoop();
 }

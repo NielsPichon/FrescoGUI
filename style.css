@@ -897,6 +897,18 @@ label:hover{
     margin-bottom: 40px;
 }
 
+.colorDiv {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;   
+}
+
 .optimize {
     /* Auto Layout */
     display: flex;

@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <title>Fresco+Axidraw</title>
+        <meta charset="utf-8">
         <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
         <link rel="stylesheet" type="text/css" href="style.css">
@@ -18,7 +19,6 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet"> 
-        <meta charset="utf-8">
     </head>
     <body class='Light-Theme'>
         <div class='main'>
@@ -39,16 +39,8 @@
                     <div class='drawSettings'>
                         <div class='format'>
                             <p>Format</p>
-                            <div class='topRow'>
-                                <div class='sizeCard selected'>
-                                    <span class='sizeCardText'>A3</span>
-                                </div>
-                                <div class='sizeCard'>
-                                    <span class='sizeCardText'>A4</span>
-                                </div>
-                                <div class='sizeCard'>
-                                    <span class='sizeCardText'>A5</span>
-                                </div>
+                            <div class='topRow' id='top-format-row'>
+                                <script scr='js/format.js'></script>
                             </div>
                             <div class='customSize'>
                                 <span class='sizeCardText'>Custom</span>
@@ -143,6 +135,5 @@
                 <div class='previewCanvas' id="sketch-holder"></div>
             </div>
         </div>
-        <script src='js/index.js'></script>
     </body>
 </html>
