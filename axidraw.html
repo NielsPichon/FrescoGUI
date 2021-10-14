@@ -37,39 +37,14 @@
                 <div class='card'>
                     <h2>Drawing Settings</h2>
                     <div class='drawSettings'>
-                        <div class='format'>
+                        <div class='format' id='format'>
                             <p>Format</p>
-                            <div class='topRow' id='top-format-row'>
-                                <script scr='js/format.js'></script>
-                            </div>
-                            <div class='customSize'>
-                                <span class='sizeCardText'>Custom</span>
-                            </div>
+                            <script src='js/format.js'></script>
                         </div>
                         <div class='margins'>
                             <p>Margins (mm)</p>
-                            <div class='marginCross'>
-                                <div class='crossRow'>
-                                    <div class='sizebox'>
-                                        <input class='sizeboxText' type='text' value='40' id='top-margin'>
-                                    </div>
-                                </div>
-                                <div class='crossRow'>
-                                    <div class='sizebox'>
-                                        <input class='sizeboxText' type='text' value='40' id='left-margin'>
-                                    </div>
-                                    <div class='link'>
-                                        <i class="fas fa-link"></i>
-                                    </div>
-                                    <div class='sizebox'>
-                                        <input class='sizeboxText' type='text' value='40' id='right-margin'>
-                                    </div>
-                                </div>
-                                <div class='crossRow'>
-                                    <div class='sizebox'>
-                                        <input class='sizeboxText' type='text' value='40' id='bottom-margin'>
-                                    </div>
-                                </div>
+                            <div class='marginCross' id='cross'>
+                               <script src="js/margins.js"></script>
                             </div>
                         </div>
                         <div class='drawRightCol'>
@@ -84,7 +59,7 @@
                                 </div>
                             </div>
                             <div class='optimize'>
-                                <input class='tickbox' type='checkbox' id='optimizeCheckbox'>
+                                <input class='tickbox' type='checkbox' id='optimizeCheckbox' onclick="toggleOptimize()">
                                 <label for='optimizeCheckbox'>Optimize trajectory</label>
                             </div>
                         </div>

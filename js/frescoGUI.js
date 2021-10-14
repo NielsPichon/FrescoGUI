@@ -27,7 +27,7 @@ let canvasColor = black;
 
 let currentShapes = []; // shapes to draw
 let currentFormat = formats.a3; // current paper format
-let currentMargin = 30; // margin on each side of the canvas
+let currentMargins = [30, 30, 30, 30]; // margin on each side of the canvas
 let currentAspectRatio = 1; // drawing aspect ratio
 let currentJSONData = null; // json data
 if (window.shapes) {
@@ -41,6 +41,10 @@ let optimize = false; // whether the drawing should be optimized before drawing
 let currentLastLayer = 0;
 let selectedLayers = [0];
 
+
+function toggleOptimize() {
+  optimize = document.getElementById('optimizeCheckbox').checked;
+}
 
 function setup() {
   let canvas = createCanvas(490, currentFormat[1] / currentFormat[0] * 490);
@@ -87,19 +91,9 @@ function setLayerColor(layerIdx, color, shouldRedraw=true) {
  * @param {Array<number>} format format in mm x mm
  */
 function updateFormat(format) {
-  resizeCanvas(format[0], format[1], true);
-  updateShapes(currentShapes, format, currentMargin, currentAspectRatio);
-  redraw();
-}
-
-/**
- * Updates the margin to the specified value and redraws the preview canvas
- * @param {number} margin margin in mm
- */
-function updateMargin(margin) {
-  currentMargin = margin;
-  updateShapes(currentShapes, currentFormat, currentMargin, currentAspectRatio);
-  redraw();
+  resizeCanvas(490, format[1] / format[0] * 490, true);
+  currentFormat = format;
+  updateDrawing();
 }
 
 /**
@@ -108,7 +102,7 @@ function updateMargin(margin) {
  */
 function updateResolution(resolution) {
   currentSplineResolution = resolution;
-  updateShapes(currentShapes, currentFormat, currentMargin, currentAspectRatio);
+  updateShapes(currentShapes, currentFormat, currentMargins, currentAspectRatio);
   redraw();
 }
 
@@ -119,9 +113,9 @@ function updateResolution(resolution) {
  * @param {number} margin 
  * @param {number} aspectRatio 
  */
-function updateShapes(shapes, format, margin, aspectRatio) {
-  let nuFormat = [format[0] / format[1] * window.innerHeight, window.innerHeight];
-  let nuMargin = margin * window.innerHeight / format[1];
+function updateShapes(shapes, format, margins, aspectRatio) {
+  let nuFormat = [490, 490 * currentFormat[1] / currentFormat[0]];
+  let nuMargin = margins[0] * height / format[1];
   // scale_xx is the scale in x if a point with 1 in absciss is mapped to the
   // edge of the paper minus the margin   
   const scale_xx = nuFormat[0] - 2 * nuMargin;
@@ -198,7 +192,7 @@ function updateDrawing(initLayers=false, shouldRedraw=true) {
     currentAspectRatio = currentJSONData['shapes'][0]['canvas_width'] / currentJSONData['shapes'][0]['canvas_height'];
     
     // fit the shapes to canvas/paper
-    updateShapes(shapes, currentFormat, currentMargin, currentAspectRatio);
+    updateShapes(shapes, currentFormat, currentMargins, currentAspectRatio);
   }
   else {
     currentShapes = [];
