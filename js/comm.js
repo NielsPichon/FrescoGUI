@@ -30,6 +30,18 @@ function sendResetRequest() {
     console.log('Sent reset request');
 }
 
+function sendHomeRequest() {
+    sendRequest({}, "home")
+    console.log('Sent reset request');
+}
+
+function sendSecondaryAction() {
+    let secondaryBttn = document.getElementById('secondary-bttn');
+    if (secondaryBttn.className == 'fas fa-pause') {
+        secondaryBttn.className = 'fas fa-home';
+        sendPauseResumeRequest();
+    }
+}
 
 function formatConfig() {
     return {

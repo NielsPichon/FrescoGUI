@@ -143,7 +143,7 @@ function createApplyAll(parentId) {
     }
 
     let label = document.createElement('label');
-    label.for = 'colorCheckbox';
+    label.htmlFor = 'colorCheckbox';
     label.textContent = 'Apply color to all layers';
     clrDiv.appendChild(label);
 
