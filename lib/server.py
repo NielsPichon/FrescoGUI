@@ -1,4 +1,4 @@
-from multiprocessing import Process
+from multiprocessing import Process, Pipe
 import threading
 import queue
 import json
@@ -54,14 +54,22 @@ def home():
     app.config['Queue'].put((RequestTypes.home, ''))
     return "sent"
 
+@app.route('/reset', methods=['POST'])
+@cross_origin()
+def reset():
+    print('Got a request to stop motors')
+    app.config['Queue'].put((RequestTypes.reset, ''))
+    return "sent"
+
+
 @app.route('/status', methods=['GET'])
 @cross_origin()
-def get_status():
-    if not app.config['StatusQueue'].empty():
-        app.config['LastStatus'] = app.config['StatusQueue'].get()
-
-    return app.config['LastStatus']
-    
+def status():
+    if app.config['StatusQueue'].poll():
+        received = app.config['StatusQueue'].recv()
+        return received
+    else:
+        return ''
 
 def app_runner():
     app.run()
@@ -99,8 +107,8 @@ def get_browser() -> webbrowser.BaseBrowser:
 if __name__ == '__main__':
     rqst_q = queue.Queue()
     app.config['Queue'] = rqst_q
-    status_q = queue.LifoQueue() # we always want the latest known status
-    app.config['StatusQueue'] = status_q
+    status_rcv, status_pipe = Pipe() # we always want the latest known status
+    app.config['StatusQueue'] = status_rcv
     last_status = {
         'status': Status.STOPPED,
         'message': 'Press play to draw.',
@@ -123,4 +131,4 @@ if __name__ == '__main__':
 
     # run axidraw handler
     print('Starting axidraw handler...')
-    request_processor(rqst_q, status_q)
+    request_processor(rqst_q, status_pipe)

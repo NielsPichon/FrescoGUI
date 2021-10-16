@@ -648,6 +648,18 @@ label:hover{
     color: var(--White);
 }
 
+.actionButton.secondary:disabled {
+    color: var(--dark-gray);
+    background-color: var(--light-gray);
+}
+
+.actionButton.secondary:disabled:hover {
+    color: var(--dark-gray);
+    background-color: var(--light-gray);
+    cursor: default;
+    box-shadow: none;
+}
+
 .actionButton.stop {
     color: var(--Red);
     background-color: var(--light-red);
@@ -1161,6 +1173,8 @@ input:checked + .switchSlider:before {
     font-size: 14px;
     line-height: 22px;
     color: var(--Black);
+    max-width: 490px;
+    word-wrap: break-word;
 }
 
 .progressRow {

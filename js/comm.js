@@ -15,6 +15,13 @@ function sendRequest(data, endpoint, type="POST") {
     r.send(JSON.stringify(data));
 }
 
+function getRequest(endpoint) {
+    let r = new XMLHttpRequest();
+    r.open('GET', "http://127.0.0.1:5000/" + endpoint, false);
+    r.send(null);
+    return r.responseText;
+}
+
 function sendDrawRequest() {
     sendRequest({
         config: formatConfig(),
@@ -44,25 +51,28 @@ function sendHomeRequest() {
 }
 
 function sendSecondaryAction() {
-    let secondaryBttn = document.getElementById('secondary-bttn-icon');
-    if (secondaryBttn.className == 'fas fa-pause') {
-        secondaryBttn.className = 'fas fa-home';
+    let icon = document.getElementById('secondary-bttn-icon');
+    if (icon.className == 'fas fa-pause') {
+        icon.className = 'fas fa-home';
+        document.getElementById('secondary-bttn-icon').className = 'fas fa-home';
         sendPauseResumeRequest();
     }
     else {
-        secondaryBttn.className = 'fas fa-pause';
+        icon.className = 'fas fa-pause';
+        document.getElementById('secondary-bttn-icon').className = 'fas fa-pause';
         sendHomeRequest();
     }
 }
 
 function sendDrawResumeRequest() {
     shouldUpdateStatus = true;
-    let secondaryBttn = document.getElementById('secondary-bttn-icon');
-    if (secondaryBttn.className == 'fas fa-home') {
+    let icon = document.getElementById('secondary-bttn-icon');
+    if (icon.className == 'fas fa-home') {
         sendPauseResumeRequest();
     }
     else {
         sendDrawRequest();
+        document.getElementById('secondary-bttn').disabled = false;
     }
 }
 
@@ -72,26 +82,26 @@ function updateStatus(status) {
     setStatusMessage(status.message);
 
     if (status.state == 'stopped') {
-        let secondaryBttn = document.getElementById('secondary-bttn');
         document.getElementById('secondary-bttn-icon').className = 'fas fa-pause';
-        secondaryBttn.disabled = true;
+        document.getElementById('secondary-bttn').disabled = true;
         hideProgressBar();
         shouldUpdateStatus = false;
     }
     else if (status.state == 'paused') {
-        document.getElementById('secondary-bttn-icon').className = 'fas fa-home';
         showProgressBar();
     }
     else if (status.state = 'playing') {
-        document.getElementById('secondary-bttn-icon').className = 'fas fa-pause';
-        secondaryBttn.disabled = false;
         showProgressBar();
         setProgressPercentage(status.progress)
     }
 }
 
 function getStatus() {
-    let status = sendRequest({}, "status", "GET");
+    let response = getRequest("status");
+    let status;
+    if (response !== '') {
+        eval('status = ' + response)
+    }
 
     if (status) {
         updateStatus(status);
@@ -102,7 +112,7 @@ function formatConfig() {
     return {
         axidraw_options: axidraw_options,
         spline_res: currentSplineResolution,
-        margin: currentMargin,
+        margin: currentMargins[0],
         optimize: optimize,
         format: {x: currentFormat[0], y: currentFormat[1]},
         layers: selectedLayers
@@ -115,4 +125,4 @@ function maybeGetStatus() {
     }
 }
 
-const statusUpdater = window.setInterval(maybeGetStatus, 200);
+const statusUpdater = window.setInterval(maybeGetStatus, 500);

@@ -1,11 +1,12 @@
 
-import argparse
 import atexit
+from os import stat
 import time
 import signal
 from typing import NoReturn, List, Dict
 from multiprocessing import Process, Event
-from queue import LifoQueue, Queue
+from multiprocessing.connection import Connection
+from queue import Queue
 
 from AxiFresco.axifresco import Axifresco, Point, json_to_shapes, draw, Status
 
@@ -21,7 +22,7 @@ class RequestTypes:
     reset: str = 'reset'
     home: str = 'home'
 
-def axidraw_runner(data, pause_event: Event, abort_event: Event, status_q: LifoQueue):
+def axidraw_runner(data, pause_event: Event, abort_event: Event, status_pipe: Connection):
     # process the data
     global_config = data['config']
     shapes = data['drawing']
@@ -43,7 +44,7 @@ def axidraw_runner(data, pause_event: Event, abort_event: Event, status_q: LifoQ
                    unsafe=True,
                    pause_event=pause_event,
                    abort_event=abort_event,
-                   status_queue=status_q)
+                   status_pipe=status_pipe)
     ax.set_format(Point(format['x'], format['y']))
 
     def exit_cleanly():
@@ -65,7 +66,7 @@ def axidraw_runner(data, pause_event: Event, abort_event: Event, status_q: LifoQ
     # stop the axidraw
     exit_cleanly()
 
-def draw_request(data, status_q: LifoQueue):
+def draw_request(data, status_pipe: Connection):
     print('Drawing...')
     global axi_thread
 
@@ -76,66 +77,67 @@ def draw_request(data, status_q: LifoQueue):
         return
 
     # update status
-    status_q.put({
-        'status': Status.PLAYING,
+    status_pipe.send({
+        'state': Status.PLAYING,
         'message': 'Drawing starts. Pre-processing data...',
         'progress': 0
     })
 
     # start a new process which draws
-    axi_thread = Process(target=axidraw_runner, args=(data, PAUSE, ABORT, status_q,), daemon=True)
+    axi_thread = Process(target=axidraw_runner, args=(data, PAUSE, ABORT, status_pipe,), daemon=True)
     PAUSE.clear()
     ABORT.clear()
     axi_thread.start()
 
-def stop_draw(data, status_q: LifoQueue):
+def stop_draw(data, status_pipe: Connection):
     print('Stopping axidraw...')
     global axi_thread
 
     if axi_thread is not None and axi_thread.is_alive():
-        status_q.put({
-                'status': Status.STOPPED,
+        status_pipe.send({
+                'state': Status.STOPPED,
                 'message': 'Axidraw has been stopped. Press play to draw.',
                 'progress': 0
         })  
         axi_thread.terminate()
         # because the axidraw will most likely have not 
         # exited cleanly, reset it.
-        reset_axidraw()
+        reset_axidraw({}, status_pipe)
 
-def pause_resume(data, status_q: LifoQueue):
+def pause_resume(data, status_pipe: Connection):
     if PAUSE.is_set():
-        # clear the status q to avoid memory bloat
-        with status_q.mutex:
-            status_q.queue.clear()
         print('Resuming draw...')
         PAUSE.clear()
     else:
         print('Pausing draw...')
         PAUSE.set()
-        status_q.put({
-            'status': Status.PAUSED,
+        status_pipe.send({
+            'state': Status.PAUSED,
             'message': 'Axidraw paused. Press Play to resume or Home to send the draw head home.',
             'progress': 0
         })
 
-def reset_axidraw(data, status_q: LifoQueue):
+def reset_axidraw(data, status_pipe: Connection):
+    global axi_thread
+    if axi_thread and axi_thread.is_alive():
+        return
+
     print('Resetting the axidraw...')
-    ax = Axifresco(config={}, reset=True)
+    ax = Axifresco(config={}, unsafe=True, reset=True)
     ax.stop_motors()
     ax.axidraw.disconnect()
-    status_q.put({
-            'status': Status.STOPPED,
+    status_pipe.send({
+            'state': Status.STOPPED,
             'message': 'Axidraw has been stopped. Press play to draw.',
             'progress': 0
     })
 
-def go_home(data, status_q: LifoQueue):
+def go_home(data, status_pipe: Connection):
     if PAUSE.is_set():
         print('Aborting and sending axidraw home')
         ABORT.set()
-        status_q.put({
-            'status': Status.STOPPED,
+        status_pipe.send({
+            'state': Status.STOPPED,
             'message': 'Axidraw has been sent home. Press play to draw.',
             'progress': 0
         })
@@ -151,7 +153,7 @@ process_request = {
     RequestTypes.home: go_home,
 }
 
-def request_processor(q: Queue, status_q: LifoQueue) -> NoReturn:
+def request_processor(q: Queue, status_pipe: Connection) -> NoReturn:
     """
     Process runner for the axidraw server
     """
@@ -160,7 +162,7 @@ def request_processor(q: Queue, status_q: LifoQueue) -> NoReturn:
         print(q)
         while 1:
             request, data = q.get()
-            process_request[request](data, status_q)
+            process_request[request](data, status_pipe)
             time.sleep(0.01)
 
     except KeyboardInterrupt:
