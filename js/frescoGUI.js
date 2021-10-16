@@ -1,12 +1,3 @@
-// layer colors
-layerColors = [
-  '3a86ff',
-  'ffbe0b',
-  'fb5607',
-  'ff006e',
-  '8338ec',
-]
-
 // helper for the various default formats
 const formats = {
   a3: [297, 420],
@@ -30,36 +21,48 @@ axidraw_options = {
   port_config: 0,
 }
 
+let darkTheme = false;
+const black = '263440';
+let canvasColor = black;
+
 let currentShapes = []; // shapes to draw
 let currentFormat = formats.a3; // current paper format
-let currentMargin = 30; // margin on each side of the canvas
+let currentMargins = [30, 30, 30, 30]; // margin on each side of the canvas
 let currentAspectRatio = 1; // drawing aspect ratio
 let currentJSONData = null; // json data
 if (window.shapes) {
   currentJSONData = JSON.parse(window.shapes); // load data from window
 }
+else {
+  currentJSONData = JSON.parse(defaultShape);
+}
 let currentSplineResolution = 10; // resolution of the splines
 let optimize = false; // whether the drawing should be optimized before drawing
-let canvasColor = [0, 0, 0];
 let currentLastLayer = 0;
 let selectedLayers = [0];
 
 
+function toggleOptimize() {
+  optimize = document.getElementById('optimizeCheckbox').checked;
+}
+
 function setup() {
-  let canvas = createCanvas(currentFormat[0] / currentFormat[1] * window.innerHeight, window.innerHeight);
+  let canvas = createCanvas(490, currentFormat[1] / currentFormat[0] * 490);
   // Move the canvas so it’s inside our <div id="sketch-holder">.
   canvas.parent('sketch-holder');
 
   // load the drawing in the default path if it exists
-  updateDrawing(true);
+  updateDrawing(true, false);
+
+  // add the layers to the ui now as they need to first have the drawing data parsed to exist
+  addLayers()
 
   // prevent drawing continuously
   noLoop();
 }
 
-
 function draw() {
-  background(canvasColor);
+  background(colorFromHex(canvasColor));
   currentShapes.forEach(s => s.draw());
 }
 
@@ -76,9 +79,11 @@ function setCanvasColor(color) {
  * @param {number} layerIdx index of the layer to set the color of
  * @param {String} color hex code of the desired color 
  */
-function setLayerColor(layerIdx, color) {
+function setLayerColor(layerIdx, color, shouldRedraw=true) {
   layerColors[layerIdx % layerColors.length] = color;
-  updateDrawing();
+  if (shouldRedraw) {
+    updateDrawing();
+  }
 }
 
 /**
@@ -86,19 +91,9 @@ function setLayerColor(layerIdx, color) {
  * @param {Array<number>} format format in mm x mm
  */
 function updateFormat(format) {
-  resizeCanvas(format[0], format[1], true);
-  updateShapes(currentShapes, format, currentMargin, currentAspectRatio);
-  redraw();
-}
-
-/**
- * Updates the margin to the specified value and redraws the preview canvas
- * @param {number} margin margin in mm
- */
-function updateMargin(margin) {
-  currentMargin = margin;
-  updateShapes(currentShapes, currentFormat, currentMargin, currentAspectRatio);
-  redraw();
+  resizeCanvas(490, format[1] / format[0] * 490, true);
+  currentFormat = format;
+  updateDrawing();
 }
 
 /**
@@ -106,21 +101,10 @@ function updateMargin(margin) {
  * @param {number} resolution Number of subdivisions along a spline
  */
 function updateResolution(resolution) {
+  console.log('new res', resolution)
   currentSplineResolution = resolution;
-  updateShapes(currentShapes, currentFormat, currentMargin, currentAspectRatio);
+  updateShapes(currentShapes, currentFormat, currentMargins, currentAspectRatio);
   redraw();
-}
-
-function toggleLayer(layerIdx) {
-  let occurence = array.indexOf(layerIdx)
-  if (occurence > -1) {
-    selectedLayers.splice(occurence, 1);
-  }
-  else {
-    selectedLayers.push(layerIdx);
-  }
-
-  updateDrawing();
 }
 
 /**
@@ -130,9 +114,9 @@ function toggleLayer(layerIdx) {
  * @param {number} margin 
  * @param {number} aspectRatio 
  */
-function updateShapes(shapes, format, margin, aspectRatio) {
-  let nuFormat = [format[0] / format[1] * window.innerHeight, window.innerHeight];
-  let nuMargin = margin * window.innerHeight / format[1];
+function updateShapes(shapes, format, margins, aspectRatio) {
+  let nuFormat = [490, 490 * currentFormat[1] / currentFormat[0]];
+  let nuMargin = margins[0] * height / format[1];
   // scale_xx is the scale in x if a point with 1 in absciss is mapped to the
   // edge of the paper minus the margin   
   const scale_xx = nuFormat[0] - 2 * nuMargin;
@@ -155,7 +139,11 @@ function updateShapes(shapes, format, margin, aspectRatio) {
 
   // set shapes color
   shapes.forEach(s => {
-    s.setColor(colorFromHex(layerColors[s.layer % layerColors.length]))
+    let nuColor = layerColors[s.layer % layerColors.length];
+    if (nuColor == null) {
+      nuColor = 'fff';
+    }
+    s.setColor(colorFromHex(nuColor))
   })
 
   // filter out shapes that are not on a selected layer
@@ -171,7 +159,7 @@ function updateShapes(shapes, format, margin, aspectRatio) {
 /**
  * Update the shapes based on the current json data and draws them
  */
-function updateDrawing(initLayers=false) {
+function updateDrawing(initLayers=false, shouldRedraw=true) {
   
   if (currentJSONData) {
     if ("shapes" in currentJSONData) {
@@ -198,20 +186,23 @@ function updateDrawing(initLayers=false) {
 
       // init all layers as selected
       selectedLayers = [...Array(currentLastLayer + 1).keys()];
+      layers = [...Array(currentLastLayer + 1).keys()];
     }
 
     // extract aspect ratio
     currentAspectRatio = currentJSONData['shapes'][0]['canvas_width'] / currentJSONData['shapes'][0]['canvas_height'];
     
     // fit the shapes to canvas/paper
-    updateShapes(shapes, currentFormat, currentMargin, currentAspectRatio);
+    updateShapes(shapes, currentFormat, currentMargins, currentAspectRatio);
   }
   else {
     currentShapes = [];
   }
 
   // redraw
-  redraw();
+  if (shouldRedraw) {
+    redraw();
+  }
 }
 
 /**

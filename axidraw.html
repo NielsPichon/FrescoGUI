@@ -1,6 +1,8 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <title>Fresco+Axidraw</title>
+        <meta charset="utf-8">
         <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
         <link rel="stylesheet" type="text/css" href="style.css">
@@ -10,36 +12,105 @@
         <script src="p5.Fresco/js/utils.js"></script>
         <script src="p5.Fresco/js/futural.js"></script>
         <script src="p5.Fresco/js/fonts.js"></script>
+        <script src="js/defaultShape.js"></script>
         <script src="js/frescoGUI.js"></script>
         <script src="js/comm.js"></script>
-        <meta charset="utf-8">
+        <script src="https://kit.fontawesome.com/65f4948284.js" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet"> 
     </head>
-    <body>
-        <div class="columnBox left" id="sketch-column">
-            <div class="sketch">
-                <div id="sketch-holder"></div>
+    <body class='Light-Theme'>
+        <div class='main'>
+            <div class='settingsCol'>
+                <div class='heading'>
+                    <h1>Fresco GUI</h1>
+                    <div class='theme'>
+                        <p class='dark'>Dark</p>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="switchSlider fas"></span>
+                        </label>
+                        <p class='light'>Light</p>
+                    </div>
+                </div>
+                <div class='card'>
+                    <h2>Drawing Settings</h2>
+                    <div class='drawSettings'>
+                        <div class='format' id='format'>
+                            <p>Format</p>
+                            <script src='js/format.js'></script>
+                        </div>
+                        <div class='margins'>
+                            <p>Margins (mm)</p>
+                            <div class='marginCross' id='cross'>
+                               <script src="js/margins.js"></script>
+                            </div>
+                        </div>
+                        <div class='drawRightCol'>
+                            <div class='splineRes'>
+                                <p>Spline resolution</p>
+                                <div class='sliderContainer'>
+                                    <div class='rangeFigRow'>
+                                        <p class='rangeFig'>2</p>
+                                        <p class='rangeFig'>30</p>
+                                    </div>
+                                    <input type="range" min="2" max="30" value="10" class="slider" name='spline' id="spline" ondragend="updateResolution(document.getElementById('spline').value)">
+                                </div>
+                            </div>
+                            <div class='optimize'>
+                                <input class='tickbox' type='checkbox' id='optimizeCheckbox' onclick="toggleOptimize()">
+                                <label for='optimizeCheckbox'>Optimize trajectory</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='otherSettings'>
+                    <div class='leftCol'>
+                        <div class='card'>
+                            <h2>Axidraw Settings</h2>
+                            <div class="options" id='axidraw-settings'>
+                                <script src='js/axidrawOptions.js'></script>
+                            </div>
+                        </div>
+                        <div class='card' id='advanced-options'>
+                            <h2>Advanced Settings</h2>
+                            <script src='js/advancedOptions.js'></script>
+                        </div>
+                    </div>
+                    <div class='rightCol'>
+                        <div class='card layerCard' id='layer-settings'>
+                            <h2>Layers</h2>
+                            <script src="js/layers.js"></script>
+                        </div>
+                        <div class='export'>
+                            <button class='exportBttn'>
+                                <span class='buttonText'>Export</span>
+                                <i class="far fa-arrow-alt-circle-down buttonIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="columnBox" id="options">
-            <div class="statusBar">
-                <div class="playback">
-                    <button class="playbackIcon" id="play" onclick="sendDrawRequest()">
-                        <p>▶︁</p>
+            <div class="previewCol">
+                <div class='controlPanel'>
+                    <button class='actionButton' onclick="sendDrawResumeRequest()">
+                        <i class="fas fa-play"></i>
                     </button>
-                    <button class="playbackIcon" id="pause" onclick="sendPauseResumeRequest()">
-                        <p>⏸︁</p>
+                    <button class='actionButton secondary' id='secondary-bttn' onclick="sendSecondaryAction()" disabled>
+                        <i class="fas fa-pause" id='secondary-bttn-icon'></i>
                     </button>
-                    <button class="playbackIcon" id="stop" onclick="sendStopRequest()">
-                        <p>⏹︁</p>
+                    <button class='actionButton stop' onclick="sendStopRequest()">
+                        <i class="fas fa-stop"></i>
+                    </button>
+                    <button class='actionButton secondary' onclick="sendResetRequest()">
+                        <i class="fas fa-power-off"></i>
                     </button>
                 </div>
-                <p class='status'>This is the current status of the axidraw.</p>
-            </div>            
-            <div class="columnBox" id="file-options">
-
-            </div>
-            <div class="columnBox" id="axidraw-options">
-                
+                <div class='previewCanvas' id="sketch-holder"></div>
+                <div class='statusBar' id='status'>
+                    <script src="js/progressBar.js"></script>
+                </div>
             </div>
         </div>
     </body>
