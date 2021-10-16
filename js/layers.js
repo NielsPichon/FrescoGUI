@@ -130,17 +130,7 @@ function createApplyAll(parentId) {
     clrDiv.appendChild(input);
 
     
-    
-    input.onclick = () => {
-        if (input.checked) {
-            createColorPickerObject(clrDiv, 'global-picker', globalColor, false);
-            clrPicker = document.getElementById('global-picker');
-            clrDiv.insertBefore(clrPicker, clrPicker.previousElementSibling);
-        }
-        else {
-            document.getElementById('global-picker').remove();
-        }
-    }
+    createColorPickerObject(clrDiv, 'global-picker', globalColor, false);
 
     let label = document.createElement('label');
     label.htmlFor = 'colorCheckbox';

@@ -6,6 +6,7 @@
     --Black: #3a4d5f;
     --Blue: #2B8EFC;
     --main-font: 'Fira Sans', sans-serif;
+    --status-font: 'Fira Code', monospace;
     --dark-gray: #9FB3C5;
     --Green: #46CB3A;
     --dark-theme: #263440;
@@ -108,7 +109,7 @@ ul {
 .previewCol {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     padding: 20px 40px 40px;
     
     /* width: 570px; */
@@ -475,7 +476,6 @@ label:hover{
 
     /* Inside Auto Layout */
     flex: none;
-    order: 1;
     flex-grow: 0;
     margin: 20px 0px;
 }
@@ -581,7 +581,7 @@ label:hover{
 
 .tickbox:checked {
     border-color: var(--Blue) !important;
-    box-shadow: 0px 0px 0px 2px var(--White) inset;
+    box-shadow: 0px 0px 0px 3px var(--White) inset;
     background-color: var(--Blue);
 }
 
@@ -1095,12 +1095,13 @@ label:hover{
     height: 10px;
     width: 10px;
     left: 3px;
-    bottom: 5px;
+    bottom: 3px;
     background-color: var(--White);
     -webkit-transition: .35s;
     transition: .35s;
     border-radius: 50%;
     content: '\f186';
+    font-size: 11px;
     color: var(--Black);
 }
 
@@ -1139,4 +1140,58 @@ input:checked + .switchSlider:before {
 
 .light {
     margin-left: 8px;
+}
+
+
+.statusBar {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: column;
+    padding-top: 16px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;
+}
+
+.statusMessage {
+    font-family: var(--status-font);
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--Black);
+}
+
+.progressRow {
+    width: 490px;
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 16px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;
+}
+
+.progressBar{
+    width: 450px;
+    height: 6px;
+    background-color: var(--med-gray);
+    border-radius: 3px;
+    margin-right: 8px
+}
+
+.progressBarFront {
+    height: 6px;
+    background-color: var(--Blue);
+    border-radius: 3px;
+    margin-right: 8px  
+}
+
+.progressPercentage {
+    width: 40px;
+    text-align: right;
 }
