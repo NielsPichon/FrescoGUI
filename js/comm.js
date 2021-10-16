@@ -1,14 +1,14 @@
 let axidrawStatus = {
     state: 'stopped', //playing/stopped/paused
-    message: 'Press play to run.', // any string
+    message: 'Press play to draw.', // any string
     progress: 0 //0-100 int
 };
 
 let shouldUpdateStatus = false;
 
-function sendRequest(data, endpoint) {
+function sendRequest(data, endpoint, type="POST") {
     let r = new XMLHttpRequest();
-    r.open("POST", "http://127.0.0.1:5000/" + endpoint, true);
+    r.open(type, "http://127.0.0.1:5000/" + endpoint, true);
     r.onreadystatechange = function () {
         if (r.readyState != 4 || r.status != 200) return;
     };
@@ -84,14 +84,14 @@ function updateStatus(status) {
     }
     else if (status.state = 'playing') {
         document.getElementById('secondary-bttn-icon').className = 'fas fa-pause';
-        secondaryBttn.false = true;
+        secondaryBttn.disabled = false;
         showProgressBar();
         setProgressPercentage(status.progress)
     }
 }
 
 function getStatus() {
-    let status = sendRequest({}, "status");
+    let status = sendRequest({}, "status", "GET");
 
     if (status) {
         updateStatus(status);

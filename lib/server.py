@@ -11,6 +11,7 @@ from flask_restful import Api
 from flask_cors import CORS, cross_origin
 
 from lib.axirunner import RequestTypes, request_processor
+from AxiFresco.axifresco import Status
 
 
 PORT = 8000
@@ -43,9 +44,24 @@ def stop():
 @cross_origin()
 def pause():
     print('Got a request to pause/resume')
-    print(app.config['Queue'])
     app.config['Queue'].put((RequestTypes.pause_resume, ''))
     return "sent"
+
+@app.route('/home', methods=['POST'])
+@cross_origin()
+def home():
+    print('Got a request to send axidraw home')
+    app.config['Queue'].put((RequestTypes.home, ''))
+    return "sent"
+
+@app.route('/status', methods=['GET'])
+@cross_origin()
+def get_status():
+    if not app.config['StatusQueue'].empty():
+        app.config['LastStatus'] = app.config['StatusQueue'].get()
+
+    return app.config['LastStatus']
+    
 
 def app_runner():
     app.run()
@@ -81,8 +97,16 @@ def get_browser() -> webbrowser.BaseBrowser:
 
 
 if __name__ == '__main__':
-    q = queue.Queue()
-    app.config['Queue'] = q
+    rqst_q = queue.Queue()
+    app.config['Queue'] = rqst_q
+    status_q = queue.LifoQueue() # we always want the latest known status
+    app.config['StatusQueue'] = status_q
+    last_status = {
+        'status': Status.STOPPED,
+        'message': 'Press play to draw.',
+        'progress': 0
+    }
+    app.config['LastStatus'] = last_status
 
     print('Starting python server...')
     app_proc = threading.Thread(target=app_runner, daemon=True)
@@ -99,4 +123,4 @@ if __name__ == '__main__':
 
     # run axidraw handler
     print('Starting axidraw handler...')
-    request_processor(q)
+    request_processor(rqst_q, status_q)
