@@ -73,6 +73,10 @@ function toggleAllEyecon(visible) {
 function toggleAllLayers(visible) {
     toggleAllEyecon(visible)
     let layers = [...Array(currentLastLayer + 1).keys()];
+    if (currentText != '') {
+        layers.push(layers.length);
+    }
+
     layers.forEach(l => {
         toggleVisibility(visible, l, false)
     });
@@ -155,6 +159,8 @@ function addLayers() {
     document.getElementById('layer-settings').appendChild(ul);
     createLayerList();
     updateDrawing();
+
+    Fresco.Futural.fontColor = colorFromHex(defaultLayerColors[layerColors.length % defaultLayerColors.length]);
 }
 
 

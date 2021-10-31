@@ -41,6 +41,12 @@ let optimize = false; // whether the drawing should be optimized before drawing
 let currentLastLayer = 0;
 let selectedLayers = [0];
 
+// extra title
+let currentText = '';
+let titleSize = 8;
+let titleBottomMargin = 60;
+let textShapes = [];
+
 
 function toggleOptimize() {
   optimize = document.getElementById('optimizeCheckbox').checked;
@@ -48,6 +54,8 @@ function toggleOptimize() {
 
 function setup() {
   let canvas = createCanvas(490, currentFormat[1] / currentFormat[0] * 490);
+  loadFonts();
+
   // Move the canvas so it’s inside our <div id="sketch-holder">.
   canvas.parent('sketch-holder');
 
@@ -59,6 +67,9 @@ function setup() {
 
   // prevent drawing continuously
   noLoop();
+
+  // disable key presses to avoid triggering random event while typing text
+  disableKeyPresses();
 }
 
 function draw() {
@@ -202,6 +213,33 @@ function updateDrawing(initLayers=false, shouldRedraw=true) {
   // redraw
   if (shouldRedraw) {
     redraw();
+
+    // add text if relevant
+    if (currentText != '') {
+      textShapes = Fresco.Futural.drawText(
+        currentText, titleSize,
+        createVector(0, -height / 2 + 490 / currentFormat[0] * titleBottomMargin),
+        true
+      );
+    }
+  }
+}
+
+/**
+ * Update the text on the drawing. A value of null will update without changing the text, and '' will remove the text entirely
+ * @param {String} text 
+ */
+function updateText(text) {
+  if (text != null) {
+    currentText = text;
+  }
+  redraw();
+  if (currentText != '') {
+    textShapes = Fresco.Futural.drawText(
+      currentText, titleSize,
+      createVector(0, -height / 2 + 490 / currentFormat[0] * titleBottomMargin),
+      true
+    );
   }
 }
 

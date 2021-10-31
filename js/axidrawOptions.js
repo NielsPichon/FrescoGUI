@@ -1,4 +1,4 @@
-function createPercentBox (parentId, text, defaultValue) {
+function createPercentBox (parentId, text, defaultValue, increment=5, maxValue=100, extraCallbackFunc=null) {
     let div = document.createElement("div");
     div.className = 'optionPercent'
     document.getElementById(parentId).appendChild(div);
@@ -12,17 +12,20 @@ function createPercentBox (parentId, text, defaultValue) {
     div.appendChild(box);
 
     let callback = (v => {
-        let nuVal = Math.min(100, Math.max(0, v));
+        let nuVal = Math.min(maxValue, Math.max(0, v));
         eval(defaultValue + '=' + nuVal);
         input.value = nuVal;
+        if (extraCallbackFunc != null) {
+            extraCallbackFunc();
+        }
     });
 
     let plusCallback = () => {
-        callback(parseInt(input.value) + 5);
+        callback(parseInt(input.value) + increment);
     }
 
     let minusCallback = () => {
-        callback(parseInt(input.value) - 5);
+        callback(parseInt(input.value) - increment);
     }
 
     let minus = document.createElement('i');

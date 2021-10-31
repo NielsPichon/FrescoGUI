@@ -25,11 +25,11 @@ function getRequest(endpoint) {
 function sendDrawRequest() {
     sendRequest({
         config: formatConfig(),
-        drawing: currentJSONData,
+        drawing: prepareJSONData(),
     }, "draw");
     console.log('Sent drawing and config to axidraw');
 }
-  
+ 
 function sendPauseResumeRequest() {
     sendRequest({}, "pause");
     console.log('Sent pause request');
@@ -76,6 +76,16 @@ function sendDrawResumeRequest() {
     }
 }
 
+function prepareJSONData() {
+    if (currentText == '') {
+        return currentJSONData;
+    }
+    else {
+        let shapes = [...currentShapes, ...textShapes];
+        return JSON.parse(shapesToJSON(shapes));
+    }
+}
+
 function updateStatus(status) {
     axidrawStatus = status;
 
@@ -109,10 +119,15 @@ function getStatus() {
 }
 
 function formatConfig() {
+    let margin = currentMargins[0];
+    if (currentText != '') {
+        margin = 0;
+    }
+
     return {
         axidraw_options: axidraw_options,
         spline_res: currentSplineResolution,
-        margin: currentMargins[0],
+        margin: margin,
         optimize: optimize,
         format: {x: currentFormat[0], y: currentFormat[1]},
         layers: selectedLayers
