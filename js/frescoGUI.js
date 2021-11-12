@@ -274,3 +274,19 @@ function loadJSON(filepath, callback) {
   };
   http.send(null);  
 }
+
+/**
+ * Make sure the user knows what they are doing upon closing the page. 
+ * @returns 
+ */
+window.onbeforeunload = function() {
+  return "Do you really want to leave the page? All unsaved settings will be lost and the axidraw will be stopped.";
+}
+
+/**
+ * Make sure we stop the axidraw before closing the page
+ */
+window.onunload = function() {
+  print('pouet')
+  sendStopRequest();
+}

@@ -4,6 +4,8 @@ let axidrawStatus = {
     progress: 0 //0-100 int
 };
 
+let doOnce = true;
+
 let shouldUpdateStatus = false;
 
 function sendRequest(data, endpoint, type="POST") {
@@ -23,6 +25,11 @@ function getRequest(endpoint) {
 }
 
 function sendDrawRequest() {
+    if (doOnce) {
+        doOnce = false;
+        alert('Please move the axidraw to home position');
+    }
+
     sendRequest({
         config: formatConfig(),
         drawing: prepareJSONData(),

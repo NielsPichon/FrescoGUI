@@ -166,9 +166,6 @@ def request_processor(q: Queue, status_pipe: Connection) -> NoReturn:
     Process runner for the axidraw server
     """
     try:
-        global axi_thread
-        axi_thread = Process(target=axidraw_runner, args=(draw_q, PAUSE, ABORT, status_pipe,), daemon=True)
-        axi_thread.start()
         print('Ready to boogie!')
         print(q)
         while 1:
