@@ -148,3 +148,22 @@ function maybeGetStatus() {
 }
 
 const statusUpdater = window.setInterval(maybeGetStatus, 500);
+
+function downloadJSONFile(content, fileName) {
+    let a = document.createElement("a");
+    let file = new Blob([content], {type: 'text/plain'});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+}
+
+function exportSettings() {
+    console.log('Got an export request')
+    config = formatConfig();
+    config.text = currentText;
+    config.textSize = titleSize;
+    config.textPos = titleBottomMargin;
+    jsonData = {settings: config, drawing: currentJSONData}
+
+    downloadJSONFile(JSON.stringify(jsonData), 'fresco_drawing.json');
+}

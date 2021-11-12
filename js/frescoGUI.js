@@ -30,12 +30,6 @@ let currentFormat = formats.a3; // current paper format
 let currentMargins = [30, 30, 30, 30]; // margin on each side of the canvas
 let currentAspectRatio = 1; // drawing aspect ratio
 let currentJSONData = null; // json data
-if (window.shapes) {
-  currentJSONData = JSON.parse(window.shapes); // load data from window
-}
-else {
-  currentJSONData = JSON.parse(defaultShape);
-}
 let currentSplineResolution = 10; // resolution of the splines
 let optimize = false; // whether the drawing should be optimized before drawing
 let currentLastLayer = 0;
@@ -47,6 +41,27 @@ let titleSize = 8;
 let titleBottomMargin = 60;
 let textShapes = [];
 
+// load from potential settings passed via the window
+if (window.axidraw_settings) {
+  window.shapes = window.axidraw_settings.drawing;
+  axidraw_options = window.axidraw_settings.settings.axidraw_options;
+  currentSplineResolution = window.axidraw_settings.spline_res;
+  currentMargins[0] = window.axidraw_settings.margin;
+  currentMargins = [currentMargins[0], currentMargins[0], currentMargins[0], currentMargins[0]];
+  optimize = window.axidraw_settings.optimize;
+  currentFormat = [window.axidraw_settings.format.x, window.axidraw_settings.format.y];
+  selectedLayers = window.axidraw_settings.layers;
+  currentText = window.axidraw_settings.text;
+  titleSize = window.axidraw_settings.textSize;
+  titleBottomMargin = window.axidraw_settings.textPos;
+}
+
+if (window.shapes) {
+  currentJSONData = JSON.parse(window.shapes); // load data from window
+}
+else {
+  currentJSONData = JSON.parse(defaultShape);
+}
 
 function toggleOptimize() {
   optimize = document.getElementById('optimizeCheckbox').checked;
@@ -287,6 +302,5 @@ window.onbeforeunload = function() {
  * Make sure we stop the axidraw before closing the page
  */
 window.onunload = function() {
-  print('pouet')
   sendStopRequest();
 }
