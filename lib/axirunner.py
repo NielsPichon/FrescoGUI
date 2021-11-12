@@ -5,6 +5,7 @@ import time
 import signal
 from typing import NoReturn, List, Dict
 from multiprocessing import Process, Event
+from multiprocessing import Queue as pQueue
 from multiprocessing.connection import Connection
 from queue import Queue
 
@@ -14,6 +15,7 @@ from AxiFresco.axifresco import Axifresco, Point, json_to_shapes, draw, Status
 axi_thread = None
 PAUSE = Event()
 ABORT = Event()
+draw_q = pQueue()
 
 class RequestTypes:
     draw: str = 'draw'
@@ -22,30 +24,13 @@ class RequestTypes:
     reset: str = 'reset'
     home: str = 'home'
 
-def axidraw_runner(data, pause_event: Event, abort_event: Event, status_pipe: Connection):
-    # process the data
-    global_config = data['config']
-    shapes = data['drawing']
-    config = global_config['axidraw_options']
-    spline_res = global_config['spline_res']
-    margin = global_config['margin']
-    optimize = global_config['optimize']
-    format = global_config['format']
-    activeLayers = global_config['layers']
-
-    print(shapes)
-
-    shapes, aspect_ratio = json_to_shapes(shapes)
-
-    shapes = [s for s in shapes if s.layer in activeLayers]
-
+def axidraw_runner(draw_q: pQueue, pause_event: Event, abort_event: Event, status_pipe: Connection):
     # create the axidraw handler and set the resolution
-    ax = Axifresco(config, resolution=spline_res,
+    ax = Axifresco({}, resolution=20,
                    unsafe=True,
                    pause_event=pause_event,
                    abort_event=abort_event,
                    status_pipe=status_pipe)
-    ax.set_format(Point(format['x'], format['y']))
 
     def exit_cleanly():
         print('Shutting down the axidraw before exiting...')
@@ -60,34 +45,57 @@ def axidraw_runner(data, pause_event: Event, abort_event: Event, status_pipe: Co
     signal.signal(signal.SIGTERM, exit_cleanly)
     atexit.register(exit_cleanly)
 
-    # draw the shapes
-    draw(shapes, aspect_ratio, ax, margin, optimize, preview=False)
+    try:
+        while True:
+            if ax.status == Status.STOPPED and draw_q.qsize() > 0:
+                data = draw_q.get()
 
-    # stop the axidraw
-    exit_cleanly()
+                status_pipe.send({
+                    'state': Status.PLAYING,
+                    'message': 'Starting a new drawing. Pre-processing shapes...',
+                    'progress': 0
+                })  
+
+                # process the data
+                global_config = data['config']
+                shapes = data['drawing']
+                config = global_config['axidraw_options']
+                spline_res = global_config['spline_res']
+                margin = global_config['margin']
+                optimize = global_config['optimize']
+                format = global_config['format']
+                activeLayers = global_config['layers']
+
+                shapes, aspect_ratio = json_to_shapes(shapes)
+                shapes = [s for s in shapes if s.layer in activeLayers]
+
+                ax.set_format(Point(format['x'], format['y']))
+                ax.set_config(config)
+                ax.resolution = spline_res
+
+                draw(shapes, aspect_ratio, ax, margin, optimize, preview=False)
+            else:
+                time.sleep(0.2)
+    except:
+        pass
+    finally:
+        exit_cleanly()
 
 def draw_request(data, status_pipe: Connection):
-    print('Drawing...')
     global axi_thread
 
     # if a thread is already running then we don't want to
     # do anything else
-    if axi_thread is not None and axi_thread.is_alive():
-        print('Axidraw is already running. Will ignore request')
-        return
-
-    # update status
-    status_pipe.send({
-        'state': Status.PLAYING,
-        'message': 'Drawing starts. Pre-processing data...',
-        'progress': 0
-    })
+    if axi_thread is None or not axi_thread.is_alive():
+        axi_thread = Process(target=axidraw_runner, args=(draw_q, PAUSE, ABORT, status_pipe,), daemon=True)
+        axi_thread.start()
+    
+    draw_q.put(data)
 
     # start a new process which draws
     axi_thread = Process(target=axidraw_runner, args=(data, PAUSE, ABORT, status_pipe,), daemon=True)
     PAUSE.clear()
     ABORT.clear()
-    axi_thread.start()
 
 def stop_draw(data, status_pipe: Connection):
     print('Stopping axidraw...')
@@ -119,7 +127,7 @@ def pause_resume(data, status_pipe: Connection):
 
 def reset_axidraw(data, status_pipe: Connection):
     global axi_thread
-    if axi_thread and axi_thread.is_alive():
+    if axi_thread is not None and axi_thread.is_alive():
         return
 
     print('Resetting the axidraw...')
@@ -158,6 +166,9 @@ def request_processor(q: Queue, status_pipe: Connection) -> NoReturn:
     Process runner for the axidraw server
     """
     try:
+        global axi_thread
+        axi_thread = Process(target=axidraw_runner, args=(draw_q, PAUSE, ABORT, status_pipe,), daemon=True)
+        axi_thread.start()
         print('Ready to boogie!')
         print(q)
         while 1:

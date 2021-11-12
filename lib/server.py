@@ -17,7 +17,6 @@ from AxiFresco.axifresco import Status
 PORT = 8000
 
 app = Flask(__name__)
-app = Flask(__name__)
 api = Api(app)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -76,7 +75,7 @@ def app_runner():
 
 def run_html_server():
     web_server = HTTPServer(('', PORT), SimpleHTTPRequestHandler)
-    
+
     try:
         print(f'HTML server opened at http://localhost:{PORT}/')
         web_server.serve_forever()
