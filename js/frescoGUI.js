@@ -37,8 +37,8 @@ let selectedLayers = [0];
 
 // extra title
 let currentText = '';
-let titleSize = 8;
-let titleBottomMargin = 60;
+let titleSize = 4;
+let titleBottomMargin = 30;
 let textShapes = [];
 
 if (window.shapes) {

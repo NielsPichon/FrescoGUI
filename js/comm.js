@@ -45,6 +45,7 @@ function sendPauseResumeRequest() {
 function sendStopRequest() {
     sendRequest({}, "stop")
     console.log('Sent stop request');
+    doOnce = true;
 }
 
 function sendResetRequest() {

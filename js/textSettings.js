@@ -8,13 +8,14 @@ function createTextBox(parentId) {
     div.appendChild(p);
 
     let box = document.createElement('div');
-    box.className = 'percentBox';
+    box.className = 'textBox';
     div.appendChild(box);
 
     let input = document.createElement('input');
     input.type = 'text';
     input.value = currentText;
     input.id = 'textBox';
+    input.className = 'textArea';
     input.onchange = () => {
         updateText(input.value)
     };

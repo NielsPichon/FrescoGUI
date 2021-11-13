@@ -204,6 +204,7 @@ ul {
     display: flex;
     flex-direction: row;
     align-items: center;
+    align-self: stretch;
     padding: 0px;
 
     /* Inside Auto Layout */
@@ -229,8 +230,7 @@ ul {
     border-radius: 4px;
 
     /* Inside Auto Layout */
-    flex: none;
-    order: 1;
+    /* flex: none; */
     flex-grow: 0;
     margin: 0px 8px;
 }
@@ -1206,4 +1206,38 @@ input:checked + .switchSlider:before {
 .progressPercentage {
     width: 40px;
     text-align: right;
+}
+
+.textBox {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+    align-items: center;
+    padding: 8px;
+
+    /* White */
+    background: var(--White);
+
+    /* Medium Grey */
+    border: 1px solid var(--med-gray);
+    box-sizing: border-box;
+    border-radius: 4px;
+
+    /* Inside Auto Layout */
+    flex-grow: 1;
+    margin: 0px 8px;
+}
+
+.textBox:focus-within {
+    border-color: var(--Blue);
+}
+
+.textArea {
+    width: 100%;
+}
+
+.percentValue {
+    width: 28px;
+    justify-self: center;
 }

@@ -36,6 +36,7 @@ function createPercentBox (parentId, text, defaultValue, id, increment=5, maxVal
     let input = document.createElement('input');
     input.id = id;
     input.type = 'text';
+    input.className = 'percentValue'
     eval('input.value = ' + defaultValue);
     input.onchange = () => {
         callback(parseInt(input.value));
