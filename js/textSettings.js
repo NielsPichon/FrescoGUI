@@ -14,6 +14,7 @@ function createTextBox(parentId) {
     let input = document.createElement('input');
     input.type = 'text';
     input.value = currentText;
+    input.id = 'textBox';
     input.onchange = () => {
         updateText(input.value)
     };
@@ -21,6 +22,12 @@ function createTextBox(parentId) {
     box.appendChild(input);
 }
 
+function setTextDefaults() {
+    document.getElementById('fontsize').value = titleSize;
+    document.getElementById('textpos').value = titleBottomMargin;
+    document.getElementById('textBox').value = currentText;
+}
+
 createTextBox('text-settings');
-createPercentBox('text-settings', 'Font size', 'titleSize', 1, 100, updateText);
-createPercentBox('text-settings', 'Vertical Position (mm)', 'titleBottomMargin', 5, 420, updateText);
+createPercentBox('text-settings', 'Font size', 'titleSize', 'fontsize', 1, 100, updateText);
+createPercentBox('text-settings', 'Vertical Position (mm)', 'titleBottomMargin', 'textpos', 5, 420, updateText);

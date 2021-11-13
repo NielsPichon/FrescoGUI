@@ -103,6 +103,13 @@ function createMarginBox(parentId, id, idx) {
     box.appendChild(input);
 }
 
+function setDefaultMargins() {
+    document.getElementById('top-margin').value = currentMargins[0];
+    document.getElementById('bottom-margin').value = currentMargins[1];
+    document.getElementById('left-margin').value = currentMargins[2];
+    document.getElementById('right-margin').value = currentMargins[3];
+}
+
 
 createMarginRow('top-cross-row');
 createMarginBox('top-cross-row', 'top-margin', 0);

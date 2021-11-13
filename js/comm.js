@@ -167,3 +167,9 @@ function exportSettings() {
 
     downloadJSONFile(JSON.stringify(jsonData), 'fresco_drawing.json');
 }
+
+function loadJSONFile(path) {
+    const response = fetch(path);
+    console.log(response);
+    return response.json();
+}

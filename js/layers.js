@@ -53,6 +53,10 @@ function toggleVisibility(visible, idx, update=true) {
         selectedLayers.splice(layerIdx, 1);
     }
 
+    if (!visible && selectedLayers.length == 0) {
+        toggleAllEyecon(false);
+    }
+
     if (update) {
         updateDrawing();
     }
@@ -70,17 +74,17 @@ function toggleAllEyecon(visible) {
 }
 
 
-function toggleAllLayers(visible) {
+function toggleAllLayers(visible, update=true) {
     toggleAllEyecon(visible)
     let layers = [...Array(currentLastLayer + 1).keys()];
-    if (currentText != '') {
-        layers.push(layers.length);
-    }
 
     layers.forEach(l => {
         toggleVisibility(visible, l, false)
     });
-    updateDrawing();
+
+    if (update) {
+        updateDrawing();
+    }
 }
 
 function createColorPickerObject(parent, id, clr, storeColor) {
@@ -163,4 +167,37 @@ function addLayers() {
     Fresco.Futural.fontColor = colorFromHex(defaultLayerColors[layerColors.length % defaultLayerColors.length]);
 }
 
+
+function resetLayers(oldLayerCount) {
+    // delete all layers
+    let parent = document.getElementById('layers-list');
+    for (let i = oldLayerCount; i >= 0; i--) {
+        let child = document.getElementById('layer-' + i);
+        parent.removeChild(child);
+    }
+
+    layerColors = [];
+    toggleAllEyecon(true);
+
+
+    // create new layer list
+    createLayerList();
+    // set the new font color
+    Fresco.Futural.fontColor = colorFromHex(defaultLayerColors[layerColors.length % defaultLayerColors.length]);
+
+    // set layers visibility
+    if (selectedLayers.length == 0) {
+        toggleAllLayers(false, false);
+    }
+    else {
+        for (let i = 0; i < currentLastLayer + 1; i++) {
+            if (selectedLayers.indexOf(i) < 0) {
+                toggleVisibility(false, i, false);
+            }
+        }
+    }
+
+    // toggle layers on and off
+    updateDrawing();
+}
 

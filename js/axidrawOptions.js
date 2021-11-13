@@ -1,4 +1,4 @@
-function createPercentBox (parentId, text, defaultValue, increment=5, maxValue=100, extraCallbackFunc=null) {
+function createPercentBox (parentId, text, defaultValue, id, increment=5, maxValue=100, extraCallbackFunc=null) {
     let div = document.createElement("div");
     div.className = 'optionPercent'
     document.getElementById(parentId).appendChild(div);
@@ -34,6 +34,7 @@ function createPercentBox (parentId, text, defaultValue, increment=5, maxValue=1
     box.appendChild(minus);
 
     let input = document.createElement('input');
+    input.id = id;
     input.type = 'text';
     eval('input.value = ' + defaultValue);
     input.onchange = () => {
@@ -47,8 +48,16 @@ function createPercentBox (parentId, text, defaultValue, increment=5, maxValue=1
     box.appendChild(plus);
 }
 
-createPercentBox('axidraw-settings', 'Writing/Drawing speed (%)', 'axidraw_options.speed_pendown');
-createPercentBox('axidraw-settings', 'In air speed (%)', 'axidraw_options.speed_penup');
-createPercentBox('axidraw-settings', 'Acceleration (%)', 'axidraw_options.accel')
-createPercentBox('axidraw-settings', 'Pen height when UP (%)', 'axidraw_options.pen_pos_up');
-createPercentBox('axidraw-settings', 'Pen height when DOWN (%)', 'axidraw_options.pen_pos_down');
+function setParametersDefault() {
+    document.getElementById('pendown').value = axidraw_options.speed_pendown
+    document.getElementById('penup').value = axidraw_options.speed_penup
+    document.getElementById('accel').value = axidraw_options.accel
+    document.getElementById('posup').value = axidraw_options.pen_pos_up
+    document.getElementById('posdown').value = axidraw_options.pen_pos_down
+}
+
+createPercentBox('axidraw-settings', 'Writing/Drawing speed (%)', 'axidraw_options.speed_pendown', 'pendown');
+createPercentBox('axidraw-settings', 'In air speed (%)', 'axidraw_options.speed_penup', 'penup');
+createPercentBox('axidraw-settings', 'Acceleration (%)', 'axidraw_options.accel', 'accel');
+createPercentBox('axidraw-settings', 'Pen height when UP (%)', 'axidraw_options.pen_pos_up', 'posup');
+createPercentBox('axidraw-settings', 'Pen height when DOWN (%)', 'axidraw_options.pen_pos_down', 'posdown');

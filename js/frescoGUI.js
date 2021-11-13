@@ -41,21 +41,6 @@ let titleSize = 8;
 let titleBottomMargin = 60;
 let textShapes = [];
 
-// load from potential settings passed via the window
-if (window.axidraw_settings) {
-  window.shapes = window.axidraw_settings.drawing;
-  axidraw_options = window.axidraw_settings.settings.axidraw_options;
-  currentSplineResolution = window.axidraw_settings.spline_res;
-  currentMargins[0] = window.axidraw_settings.margin;
-  currentMargins = [currentMargins[0], currentMargins[0], currentMargins[0], currentMargins[0]];
-  optimize = window.axidraw_settings.optimize;
-  currentFormat = [window.axidraw_settings.format.x, window.axidraw_settings.format.y];
-  selectedLayers = window.axidraw_settings.layers;
-  currentText = window.axidraw_settings.text;
-  titleSize = window.axidraw_settings.textSize;
-  titleBottomMargin = window.axidraw_settings.textPos;
-}
-
 if (window.shapes) {
   currentJSONData = JSON.parse(window.shapes); // load data from window
 }
@@ -212,7 +197,6 @@ function updateDrawing(initLayers=false, shouldRedraw=true) {
 
       // init all layers as selected
       selectedLayers = [...Array(currentLastLayer + 1).keys()];
-      layers = [...Array(currentLastLayer + 1).keys()];
     }
 
     // extract aspect ratio
@@ -290,6 +274,8 @@ function loadJSON(filepath, callback) {
   http.send(null);  
 }
 
+
+
 /**
  * Make sure the user knows what they are doing upon closing the page. 
  * @returns 
@@ -303,4 +289,45 @@ window.onbeforeunload = function() {
  */
 window.onunload = function() {
   sendStopRequest();
+}
+
+/**
+ * Function for loading settings
+ */
+function loadSettings(input) {
+  let file = input.files[0];
+
+  let reader = new FileReader();
+  reader.readAsText(file);
+
+  reader.onload = function() {
+    let result = JSON.parse(reader.result);
+
+    // process settings file
+    currentJSONData = result.drawing;
+    axidraw_options = result.settings.axidraw_options;
+    currentSplineResolution = result.settings.spline_res;
+    currentMargins[0] = result.settings.margin;
+    currentMargins = [currentMargins[0], currentMargins[0], currentMargins[0], currentMargins[0]];
+    optimize = result.settings.optimize;
+    currentFormat = [result.settings.format.x, result.settings.format.y];
+    currentText = result.settings.text;
+    titleSize = result.settings.textSize;
+    titleBottomMargin = result.settings.textPos;
+
+    let oldLayerCount = currentLastLayer;
+
+    // update drawing
+    updateDrawing(true, false);
+    selectedLayers = result.settings.layers;
+
+    // update UI
+    setAxidrawModelDropdown();
+    setParametersDefault();
+    setDefaultFormat();
+    setDefaultMargins();
+    setTextDefaults();
+    document.getElementById('optimizeCheckbox').checked = optimize;
+    resetLayers(oldLayerCount);
+  };
 }

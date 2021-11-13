@@ -15,6 +15,7 @@ function createDropDown() {
     div.appendChild(p);
     
     let select = document.createElement('select');
+    select.id = 'select';
     select.onchange = () => {
         axidraw_options.model = select.value;
         console.log(axidraw_options.model);
@@ -33,6 +34,10 @@ function createDropDown() {
     }
     
     select.value = axidraw_options.model;
+}
+
+function setAxidrawModelDropdown() {
+    document.getElementById('select').value = axidraw_options.model;
 }
 
 createDropDown();

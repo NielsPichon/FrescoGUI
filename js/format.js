@@ -71,6 +71,26 @@ function createCustomFormatButtom() {
     }
 }
 
+function setDefaultFormat() {
+    deselectFormat('A4')
+    deselectFormat('A5')
+    deselectFormat('A3')
+    deselectFormat('custom')
+
+    if (currentFormat[0] == formats.a4[0] && currentFormat[1] == formats.a4[1]) {
+        selectFormat('A4');
+    }
+    else if(currentFormat[0] == formats.a3[0] && currentFormat[1] == formats.a3[1]) {
+        selectFormat('A3');
+    }
+    else if (currentFormat[0] == formats.a5[0] && currentFormat[1] == formats.a5[1]) {
+        selectFormat('A5');
+    }
+    else {
+        selectFormat('custom');
+    }
+}
+
 topRow = document.createElement('div');
 topRow.className = 'topRow';
 topRow.id = 'top-format-row';
