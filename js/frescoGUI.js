@@ -281,15 +281,19 @@ function loadJSON(filepath, callback) {
  * @returns 
  */
 window.onbeforeunload = function() {
+  if (axidrawStatus.state = 'playing') {
+    sendPauseResumeRequest();
+  }
   return "Do you really want to leave the page? All unsaved settings will be lost and the axidraw will be stopped.";
 }
 
 /**
  * Make sure we stop the axidraw before closing the page
  */
-window.onunload = function() {
-  sendStopRequest();
-}
+window.addEventListener('unload', () => {
+  sendResetRequest(true);
+  console.log('Stopping axidraw.')
+});
 
 /**
  * Function for loading settings

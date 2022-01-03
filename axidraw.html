@@ -104,13 +104,13 @@
                         <i class="fas fa-play"></i>
                     </button>
                     <button class='actionButton secondary' id='secondary-bttn' onclick="sendSecondaryAction()" disabled>
-                        <i class="fas fa-pause" id='secondary-bttn-icon'></i>
+                        <i class="fas fa-pause" id='secondary-bttn-icon' disabled></i>
                     </button>
                     <button class='actionButton stop' onclick="sendStopRequest()">
                         <i class="fas fa-stop"></i>
                     </button>
-                    <button class='actionButton secondary' onclick="sendResetRequest()">
-                        <i class="fas fa-power-off"></i>
+                    <button class='actionButton secondary' id="off-bttn" onclick="sendResetRequest()">
+                        <i class="fas fa-power-off" id="off-bttn-icon"></i>
                     </button>
                 </div>
                 <div class='previewCanvas' id="sketch-holder"></div>

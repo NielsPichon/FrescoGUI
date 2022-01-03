@@ -1,5 +1,5 @@
 let axidrawStatus = {
-    state: 'stopped', //playing/stopped/paused
+    state: 'stopped', // playing/stopped/paused
     message: 'Press play to draw.', // any string
     progress: 0 //0-100 int
 };
@@ -7,6 +7,14 @@ let axidrawStatus = {
 let doOnce = true;
 
 let shouldUpdateStatus = false;
+
+function sendSynchronousRequest(data, endpoint, type="POST") {
+    let r = new XMLHttpRequest();
+    r.open(type, "http://127.0.0.1:5000/" + endpoint, false);
+    r.send(JSON.stringify(data));
+
+    return r.status;
+}
 
 function sendRequest(data, endpoint, type="POST") {
     let r = new XMLHttpRequest();
@@ -48,26 +56,30 @@ function sendStopRequest() {
     doOnce = true;
 }
 
-function sendResetRequest() {
-    sendRequest({}, "reset")
-    console.log('Sent reset request');
+function sendResetRequest(synchronous=false) {
+    if (synchronous) {
+        sendSynchronousRequest({}, "reset")
+    }
+    else {
+        sendRequest({}, "reset")
+    }
+    console.log('Sent motor stop request');
+    doOnce = true;
 }
 
 function sendHomeRequest() {
     sendRequest({}, "home")
-    console.log('Sent reset request');
+    console.log('Sent go home request');
 }
 
 function sendSecondaryAction() {
     let icon = document.getElementById('secondary-bttn-icon');
     if (icon.className == 'fas fa-pause') {
         icon.className = 'fas fa-home';
-        document.getElementById('secondary-bttn-icon').className = 'fas fa-home';
         sendPauseResumeRequest();
     }
     else {
         icon.className = 'fas fa-pause';
-        document.getElementById('secondary-bttn-icon').className = 'fas fa-pause';
         sendHomeRequest();
     }
 }
@@ -100,17 +112,36 @@ function updateStatus(status) {
     setStatusMessage(status.message);
 
     if (status.state == 'stopped') {
-        document.getElementById('secondary-bttn-icon').className = 'fas fa-pause';
-        document.getElementById('secondary-bttn').disabled = true;
+        // disable pause/home button
+        pauseIcon = document.getElementById('secondary-bttn-icon');
+        pauseIcon.className = 'fas fa-pause';
+        pauseIcon.disabled = true;
+        pauseBttn = document.getElementById('secondary-bttn');
+        pauseBttn.disabled = true;
+        
+        // enable power button
+        offBttn = document.getElementById('off-bttn');
+        offBttn.disabled = false;
+        document.getElementById('off-bttn-icon');
+        offIcon.disabled = false;
+
         hideProgressBar();
         shouldUpdateStatus = false;
     }
     else if (status.state == 'paused') {
         showProgressBar();
+        // enable power button
+        offBttn = document.getElementById('off-bttn');
+        offBttn.disabled = false;
+        offBttnIcon = document.getElementById('off-bttn-icon');
+        offBttnIcon.disabled = false;
     }
     else if (status.state = 'playing') {
         showProgressBar();
         setProgressPercentage(status.progress)
+        // disable power button
+        offBttn = document.getElementById('off-bttn');
+        offBttn.disabled = true;
     }
 }
 
@@ -143,9 +174,9 @@ function formatConfig() {
 }
 
 function maybeGetStatus() {
-    if (shouldUpdateStatus) {
+    // if (shouldUpdateStatus) {
         getStatus();
-    }
+    // }
 }
 
 const statusUpdater = window.setInterval(maybeGetStatus, 500);

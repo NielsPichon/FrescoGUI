@@ -1,10 +1,11 @@
-from multiprocessing import Process, Pipe
-import threading
-import queue
 import json
 import time
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+import queue
+import logging
+import threading
 import webbrowser
+from multiprocessing import Process, Pipe
+from http.server import SimpleHTTPRequestHandler, HTTPServer
 
 from flask import Flask, request
 from flask_restful import Api
@@ -24,7 +25,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/draw', methods=['POST'])
 @cross_origin()
 def draw():
-    print("Got a new draw request")
+    app.logger.debug("Got a new draw request")
     try:
         draw_data = json.loads(request.data.decode())
         app.config['Queue'].put((RequestTypes.draw, draw_data))
@@ -35,28 +36,28 @@ def draw():
 @app.route('/stop', methods=['POST'])
 @cross_origin()
 def stop():
-    print('Got a request to stop immediatly')
+    app.logger.debug('Got a request to stop immediatly')
     app.config['Queue'].put((RequestTypes.stop, ''))
     return "sent"
 
 @app.route('/pause', methods=['POST'])
 @cross_origin()
 def pause():
-    print('Got a request to pause/resume')
+    app.logger.debug('Got a request to pause/resume')
     app.config['Queue'].put((RequestTypes.pause_resume, ''))
     return "sent"
 
 @app.route('/home', methods=['POST'])
 @cross_origin()
 def home():
-    print('Got a request to send axidraw home')
+    app.logger.debug('Got a request to send axidraw home')
     app.config['Queue'].put((RequestTypes.home, ''))
     return "sent"
 
 @app.route('/reset', methods=['POST'])
 @cross_origin()
 def reset():
-    print('Got a request to stop motors')
+    app.logger.debug('Got a request to stop motors')
     app.config['Queue'].put((RequestTypes.reset, ''))
     return "sent"
 
@@ -77,13 +78,13 @@ def run_html_server():
     web_server = HTTPServer(('', PORT), SimpleHTTPRequestHandler)
 
     try:
-        print(f'HTML server opened at http://localhost:{PORT}/')
+        logging.info(f'HTML server opened at http://localhost:{PORT}/')
         web_server.serve_forever()
     except KeyboardInterrupt:
         pass
 
     web_server.server_close()
-    print('HTML server was correctly shut down.')
+    logging.info('HTML server was correctly shut down.')
 
 def get_browser() -> webbrowser.BaseBrowser:
     browsers = [
@@ -104,6 +105,19 @@ def get_browser() -> webbrowser.BaseBrowser:
 
 
 if __name__ == '__main__':
+    # set log level and logging to a log file and stderr
+    formatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
+    handlers = [
+        logging.FileHandler('debug.log', mode='w', encoding='utf-8'),
+        logging.StreamHandler()
+    ]
+    for h in handlers:
+        h.setFormatter(formatter)
+    logging.basicConfig(
+        handlers=handlers,
+        level=logging.DEBUG
+    )
+
     rqst_q = queue.Queue()
     app.config['Queue'] = rqst_q
     status_rcv, status_pipe = Pipe() # we always want the latest known status
@@ -115,19 +129,19 @@ if __name__ == '__main__':
     }
     app.config['LastStatus'] = last_status
 
-    print('Starting python server...')
+    logging.info('Starting python server...')
     app_proc = threading.Thread(target=app_runner, daemon=True)
     app_proc.start()
     
     # wait for server initialisation
     time.sleep(1.0)
 
-    print('Starting HTML server...')
+    logging.info('Starting HTML server...')
     web_server_proc = Process(target=run_html_server, daemon=True).start()
     time.sleep(1.0)
     browser = get_browser()
     browser.open(f'http://localhost:{PORT}/')
 
     # run axidraw handler
-    print('Starting axidraw handler...')
+    logging.info('Starting axidraw handler...')
     request_processor(rqst_q, status_pipe)

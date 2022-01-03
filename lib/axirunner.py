@@ -1,13 +1,14 @@
 
-import atexit
-from os import stat
+from os import kill
 import time
 import signal
-from typing import NoReturn, List, Dict
+import atexit
+import logging
+from queue import Queue
+from typing import NoReturn
 from multiprocessing import Process, Event
 from multiprocessing import Queue as pQueue
 from multiprocessing.connection import Connection
-from queue import Queue
 
 from AxiFresco.axifresco import Axifresco, Point, json_to_shapes, draw, Status
 
@@ -24,6 +25,9 @@ class RequestTypes:
     reset: str = 'reset'
     home: str = 'home'
 
+def is_axidraw_alive():
+    return axi_thread is not None and axi_thread.is_alive()
+
 def axidraw_runner(draw_q: pQueue, pause_event: Event, abort_event: Event, status_pipe: Connection):
     # create the axidraw handler and set the resolution
     ax = Axifresco({}, resolution=20,
@@ -33,11 +37,11 @@ def axidraw_runner(draw_q: pQueue, pause_event: Event, abort_event: Event, statu
                    status_pipe=status_pipe)
 
     def exit_cleanly():
-        print('Shutting down the axidraw before exiting...')
+        logging.info('Shutting down the axidraw before exiting...')
         try:
             ax.close()
         except Exception as e:
-            print ('Something wrong occured when trying to exit cleanly:\n', e)
+            logging.error(f'Something wrong occured when trying to exit cleanly:\n{e}')
 
     # try exiting cleanly. Will most likely fail to do so because of 
     # how the terminate instruction works.
@@ -84,40 +88,52 @@ def axidraw_runner(draw_q: pQueue, pause_event: Event, abort_event: Event, statu
 def draw_request(data, status_pipe: Connection):
     global axi_thread
 
-    # if a thread is already running then we don't want to
-    # do anything else
+    # Only create a new process if none is running
     if axi_thread is None or not axi_thread.is_alive():
         axi_thread = Process(target=axidraw_runner, args=(draw_q, PAUSE, ABORT, status_pipe,), daemon=True)
         axi_thread.start()
     
+    # put the data
     draw_q.put(data)
-
-    # start a new process which draws
-    axi_thread = Process(target=axidraw_runner, args=(data, PAUSE, ABORT, status_pipe,), daemon=True)
+    
+    # unset any pause or abort instruction
     PAUSE.clear()
     ABORT.clear()
 
+def kill_axidraw(status_pipe: Connection):
+    status_pipe.send({
+            'state': Status.STOPPED,
+            'message': 'Axidraw has been stopped. Press play to draw.',
+            'progress': 0
+    })  
+    axi_thread.terminate()
+
 def stop_draw(data, status_pipe: Connection):
-    print('Stopping axidraw...')
+    logging.info('Stopping axidraw...')
     global axi_thread
 
-    if axi_thread is not None and axi_thread.is_alive():
-        status_pipe.send({
-                'state': Status.STOPPED,
-                'message': 'Axidraw has been stopped. Press play to draw.',
-                'progress': 0
-        })  
-        axi_thread.terminate()
+    if is_axidraw_alive():
+        kill_axidraw(status_pipe=status_pipe)
         # because the axidraw will most likely have not 
         # exited cleanly, reset it.
         reset_axidraw({}, status_pipe)
+    else:
+        logging.warning('The axidraw process is already stopped.')
 
 def pause_resume(data, status_pipe: Connection):
+    if axi_thread is None or not axi_thread.is_alive():
+        logging.warning('Cannot pause/resume draw as the axidraw thread is dead.')
+
     if PAUSE.is_set():
-        print('Resuming draw...')
+        logging.info('Resuming draw...')
         PAUSE.clear()
+        status_pipe.send({
+            'state': Status.PLAYING,
+            'message': 'Resuming draw...',
+            'progress': 0
+        })
     else:
-        print('Pausing draw...')
+        logging.info('Pausing draw...')
         PAUSE.set()
         status_pipe.send({
             'state': Status.PAUSED,
@@ -127,10 +143,12 @@ def pause_resume(data, status_pipe: Connection):
 
 def reset_axidraw(data, status_pipe: Connection):
     global axi_thread
-    if axi_thread is not None and axi_thread.is_alive():
-        return
+    if is_axidraw_alive():
+        logging.warning('Axidraw is not stopped. Stopping it first.')
+        kill_axidraw(status_pipe=status_pipe)
+        time.sleep(0.2)
 
-    print('Resetting the axidraw...')
+    logging.info('Resetting the axidraw...')
     ax = Axifresco(config={}, unsafe=True, reset=True)
     ax.stop_motors()
     ax.axidraw.disconnect()
@@ -142,7 +160,7 @@ def reset_axidraw(data, status_pipe: Connection):
 
 def go_home(data, status_pipe: Connection):
     if PAUSE.is_set():
-        print('Aborting and sending axidraw home')
+        logging.info('Aborting and sending axidraw home')
         ABORT.set()
         status_pipe.send({
             'state': Status.STOPPED,
@@ -150,7 +168,7 @@ def go_home(data, status_pipe: Connection):
             'progress': 0
         })
     else:
-        print('Axidraw is not stopped. Can\'t send home')
+        logging.error('Axidraw is not stopped. Can\'t send home')
     
 
 process_request = {
@@ -166,11 +184,15 @@ def request_processor(q: Queue, status_pipe: Connection) -> NoReturn:
     Process runner for the axidraw server
     """
     try:
-        print('Ready to boogie!')
-        print(q)
+        logging.info('Ready to boogie!')
+        logging.info(q)
         while 1:
             request, data = q.get()
-            process_request[request](data, status_pipe)
+            try:
+                process_request[request](data, status_pipe)
+            except Exception as e:
+                logging.error(f'Something went terribly wrong:\n{e}')
+                raise e
             time.sleep(0.01)
 
     except KeyboardInterrupt:

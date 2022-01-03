@@ -1,3 +1,4 @@
 tmp.json
 *.pyc
 ./lib/__pycache__/
+*.log
