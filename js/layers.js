@@ -142,7 +142,9 @@ function createApplyAll(parentId) {
 
     let label = document.createElement('label');
     label.htmlFor = 'colorCheckbox';
-    label.textContent = 'Apply color to all layers';
+    labelTxt = document.createElement('p');
+    labelTxt.textContent = 'Apply color to all layers';
+    label.appendChild(labelTxt);
     clrDiv.appendChild(label);
 
     createEyecon(div, 'all', toggleAllLayers);

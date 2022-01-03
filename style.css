@@ -92,7 +92,7 @@ ul {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 32px 40px 30px;
+    padding: 32px 40px 32px;
 
     /* width: 870px; */
 
@@ -110,7 +110,7 @@ ul {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 20px 40px 40px;
+    padding: 32px 40px 32px;
     
     /* width: 570px; */
     
@@ -120,6 +120,13 @@ ul {
     margin: 0px 0px;
 
     background: var(--White);
+}
+
+.upload-wrapper {
+    /* Auto Layout */
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 .otherSettings {
@@ -314,19 +321,12 @@ select:hover {
     cursor: pointer;
 }
 
-label {
-    font-family: Fira Sans;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 22px;
-
-    /* Black */
-    color: var(--Black);
-}
-
 label:hover{
     cursor: pointer;
+}
+
+input[type="file"] {
+    display: none;
 }
 
 .applyAll {
@@ -1240,4 +1240,14 @@ input:checked + .switchSlider:before {
 .percentValue {
     width: 28px;
     justify-self: center;
+}
+
+.preview-header {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    align-self: stretch;
+    align-items: flex-start;
+    justify-content: flex-start;
+    justify-content: space-between;
 }

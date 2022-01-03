@@ -25,16 +25,14 @@
             <div class='settingsCol'>
                 <div class='heading'>
                     <h1>Fresco GUI</h1>
-                    <input type='file' id='load' onchange="loadSettings(this)" onclick="alert('Are you sure you want to continue? '
-                        + 'All unsaved progress will be lost.')"/>
-                    <div class='theme'>
+                    <!-- <div class='theme'>
                         <p class='dark'>Dark</p>
                         <label class="switch">
                             <input type="checkbox">
                             <span class="switchSlider fas"></span>
                         </label>
                         <p class='light'>Light</p>
-                    </div>
+                    </div> -->
                 </div>
                 <div class='card'>
                     <h2>Drawing Settings</h2>
@@ -62,7 +60,7 @@
                             </div>
                             <div class='optimize'>
                                 <input class='tickbox' type='checkbox' id='optimizeCheckbox' onclick="toggleOptimize()">
-                                <label for='optimizeCheckbox'>Optimize trajectory</label>
+                                <label for='optimizeCheckbox'><p>Optimize trajectory</p></label>
                             </div>
                         </div>
                     </div>
@@ -99,19 +97,28 @@
                 </div>
             </div>
             <div class="previewCol">
-                <div class='controlPanel'>
-                    <button class='actionButton' onclick="sendDrawResumeRequest()">
-                        <i class="fas fa-play"></i>
+                <div class="preview-header">
+                    <button class='actionButton secondary'>
+                        <label for='upload'>
+                            <span class="fas fa-file-upload"></span>
+                            <input type="file" id="upload" onchange="loadSettings(this)" onclick="alert('WARNING! If you load a new file, '
+                                + 'all unsaved progress will be lost.')"/>
+                        </label>
                     </button>
-                    <button class='actionButton secondary' id='secondary-bttn' onclick="sendSecondaryAction()" disabled>
-                        <i class="fas fa-pause" id='secondary-bttn-icon' disabled></i>
-                    </button>
-                    <button class='actionButton stop' onclick="sendStopRequest()">
-                        <i class="fas fa-stop"></i>
-                    </button>
-                    <button class='actionButton secondary' id="off-bttn" onclick="sendResetRequest()">
-                        <i class="fas fa-power-off" id="off-bttn-icon"></i>
-                    </button>
+                    <div class='controlPanel'>
+                        <button class='actionButton' onclick="sendDrawResumeRequest()">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class='actionButton secondary' id='secondary-bttn' onclick="sendSecondaryAction()" disabled>
+                            <i class="fas fa-pause" id='secondary-bttn-icon' disabled></i>
+                        </button>
+                        <button class='actionButton stop' onclick="sendStopRequest()">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                        <button class='actionButton secondary' id="off-bttn" onclick="sendResetRequest()">
+                            <i class="fas fa-power-off" id="off-bttn-icon"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class='previewCanvas' id="sketch-holder"></div>
                 <div class='statusBar' id='status'>
