@@ -58,7 +58,7 @@ function toggleVisibility(visible, idx, update=true) {
     }
 
     if (update) {
-        updateDrawing();
+        redraw();
     }
 }
 

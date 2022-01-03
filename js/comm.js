@@ -122,7 +122,7 @@ function updateStatus(status) {
         // enable power button
         offBttn = document.getElementById('off-bttn');
         offBttn.disabled = false;
-        document.getElementById('off-bttn-icon');
+        offIcon = document.getElementById('off-bttn-icon');
         offIcon.disabled = false;
 
         hideProgressBar();

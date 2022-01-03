@@ -25,6 +25,9 @@ let darkTheme = false;
 const black = '263440';
 let canvasColor = black;
 
+let canvasBuffers; // buffer we are going to draw to, to avoid freezing the page
+let textCanvasBuffer; // buffer to draw text to
+
 let currentShapes = []; // shapes to draw
 let currentFormat = formats.a3; // current paper format
 let currentMargins = [30, 30, 30, 30]; // margin on each side of the canvas
@@ -53,11 +56,16 @@ function toggleOptimize() {
 }
 
 function setup() {
-  let canvas = createCanvas(490, currentFormat[1] / currentFormat[0] * 490);
+  let [w, h] = [490, currentFormat[1] / currentFormat[0] * 490];
+  let canvas = createCanvas(w, h);
   loadFonts();
 
   // Move the canvas so it’s inside our <div id="sketch-holder">.
   canvas.parent('sketch-holder');
+
+  // create the canvas buffer
+  canvasBuffers = [createGraphics(w, h)];
+  textCanvasBuffer = createGraphics(w, h)
 
   // load the drawing in the default path if it exists
   updateDrawing(true, false);
@@ -70,11 +78,34 @@ function setup() {
 
   // disable key presses to avoid triggering random event while typing text
   disableKeyPresses();
+
+  // finally update the canvas buffer
+  drawToBuffer(true);
 }
 
 function draw() {
   background(colorFromHex(canvasColor));
-  currentShapes.forEach(s => s.draw());
+  for (let i = 0; i < canvasBuffers.length; i++) {
+    if (selectedLayers.includes(i)) {
+      image(canvasBuffers[i], 0, 0);
+    }
+  }
+  image(textCanvasBuffer, 0, 0);
+}
+
+async function drawToBuffer(shouldRedraw=true) {
+  canvasBuffers.forEach(b => b.clear());
+  currentShapes.forEach(s => {
+    while (s.layer > canvasBuffers.length - 1) {
+      newBuff = createGraphics(width, height);
+      newBuff.clear();
+      canvasBuffers.push(newBuff);
+    }
+    s.drawToBuffer(canvasBuffers[s.layer]);
+  });
+  if (shouldRedraw) {
+    redraw();
+  }
 }
 
 /**
@@ -115,7 +146,7 @@ function updateResolution(resolution) {
   console.log('new res', resolution)
   currentSplineResolution = resolution;
   updateShapes(currentShapes, currentFormat, currentMargins, currentAspectRatio);
-  redraw();
+  drawToBuffer();
 }
 
 /**
@@ -155,22 +186,35 @@ function updateShapes(shapes, format, margins, aspectRatio) {
       nuColor = 'fff';
     }
     s.setColor(colorFromHex(nuColor))
-  })
+  });
 
   // filter out shapes that are not on a selected layer
   // and store as current shapes
-  currentShapes = [];
-  shapes.forEach(s => {
-    if (selectedLayers.includes(s.layer)) {
-      currentShapes.push(s);
-    }
-  })
+  // currentShapes = [];
+  // shapes.forEach(s => {
+  //   currentShapes.push(s);
+  // })
+  currentShapes = [...shapes];
+}
+
+async function drawText() {
+  textCanvasBuffer.clear();
+
+  if (currentText != '') {
+    textShapes = Fresco.Futural.drawText(
+      currentText,
+      titleSize,
+      createVector(0, -height / 2 + 490 / currentFormat[0] * titleBottomMargin),
+      false
+    );
+    textShapes.forEach(s => s.drawToBuffer(textCanvasBuffer));
+  }
 }
 
 /**
  * Update the shapes based on the current json data and draws them
  */
-function updateDrawing(initLayers=false, shouldRedraw=true) {
+async function updateDrawing(initLayers=false, shouldRedraw=true) {
   
   if (currentJSONData) {
     if ("shapes" in currentJSONData) {
@@ -211,16 +255,10 @@ function updateDrawing(initLayers=false, shouldRedraw=true) {
 
   // redraw
   if (shouldRedraw) {
-    redraw();
+    drawToBuffer()
 
     // add text if relevant
-    if (currentText != '') {
-      textShapes = Fresco.Futural.drawText(
-        currentText, titleSize,
-        createVector(0, -height / 2 + 490 / currentFormat[0] * titleBottomMargin),
-        true
-      );
-    }
+    drawText();
   }
 }
 
@@ -232,14 +270,8 @@ function updateText(text) {
   if (text != null) {
     currentText = text;
   }
+  drawText();
   redraw();
-  if (currentText != '') {
-    textShapes = Fresco.Futural.drawText(
-      currentText, titleSize,
-      createVector(0, -height / 2 + 490 / currentFormat[0] * titleBottomMargin),
-      true
-    );
-  }
 }
 
 /**
