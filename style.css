@@ -475,7 +475,7 @@ input[type="file"] {
     /* Inside Auto Layout */
     flex: none;
     flex-grow: 0;
-    margin: 20px 0px;
+    margin: 16px 0px;
 }
 
 .layerCard {
@@ -1065,7 +1065,8 @@ input[type="file"] {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0px;
+    padding: 0px 0px 16px;
+    height: 48px;
 
     /* Inside Auto Layout */
     flex: none;
