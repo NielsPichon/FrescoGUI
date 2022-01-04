@@ -535,7 +535,7 @@ input[type="file"] {
     border-bottom: 1px solid var(--med-gray);
 }
 
-.colorPicker {
+.colorPickerBttn {
     background-color: salmon;
     border: none;
     border-radius: 8px;
@@ -544,7 +544,7 @@ input[type="file"] {
     margin-right: 8px;
 }
 
-.colorPicker:hover {
+.colorPickerBttn:hover {
     cursor: pointer;
 }
 
@@ -1274,4 +1274,62 @@ input:checked + .switchSlider:before {
     align-items: flex-start;
     justify-content: flex-start;
     justify-content: space-between;
+}
+
+
+.color-picker-pannel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 8px;
+
+    position: absolute;
+    background-color: var(--White);
+    border-radius: 4px;
+    z-index: 5000;
+    box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.05);
+}
+
+.colorboard {
+    width: 160px;
+    height: 160px;
+    border-radius: 4px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1)),
+                linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0)),
+                linear-gradient(to right, rgba(0, 255, 255, 1), rgba(0, 255, 255, 1));
+    margin-bottom: 8px;
+}
+
+.rainbow {
+    width: 160px;
+    height: 32px;
+    border-radius: 4px;
+    background: linear-gradient(to right,  #ff3232 0%, #ff9900 10%, #ffff00 17%, #ccff00 20%, #32ff00 30%, #00ff65 40%, #00ffff 50%, #0065ff 60%, #3300ff 70%, #cb00ff 81%, #ff0098 90%, #ff0004 100%);
+}
+
+.hue-handle {
+    display: inline-block;
+    position: absolute;
+    width: 4px;
+    height: 32px;
+    z-index: 5001;
+    border-color: #fff;
+    border-width: 2px;
+    border-style: solid;
+    background: transparent;
+}
+
+.picker-circle {
+    width: 6px;
+    height: 6px;
+    margin: -5px;
+    position: absolute;
+    z-index: 5001;
+    top: 0px;
+    left: 0px;
+    background-color: transparent;
+    border-radius: 20px;
+    border: 2px solid #fff;
+    box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.3);
 }

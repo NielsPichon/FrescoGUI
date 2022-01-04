@@ -70,30 +70,30 @@ function setMargins() {
 }
 
 function createLinkIcon(parentId) {
-    link = document.createElement('div');
+    let link = document.createElement('div');
     link.className = 'link';
     link.onclick = toggleLink;
     document.getElementById(parentId).appendChild(link);
 
-    icon = document.createElement('i');
+    let icon = document.createElement('i');
     icon.className = "fas fa-link";
     icon.id = 'link-icon';
     link.appendChild(icon);
 }
 
 function createMarginRow(id) {
-    row = document.createElement('div');
+    let row = document.createElement('div');
     row.className = 'crossRow';
     row.id = id;
     document.getElementById('cross').appendChild(row);
 }
 
 function createMarginBox(parentId, id, idx) {
-    box = document.createElement('div');
+    let box = document.createElement('div');
     box.className = 'sizebox';
     document.getElementById(parentId).appendChild(box);
 
-    input = document.createElement('input');
+    let input = document.createElement('input');
     input.className = 'sizeboxText';
     input.value = currentMargins[idx];
     input.type = 'text';

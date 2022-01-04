@@ -1,15 +1,15 @@
 function createSlider() {
-    container = document.getElementById('slider-container');
+    let container = document.getElementById('slider-container');
 
-    div = document.createElement('div');
+    let div = document.createElement('div');
     div.className = 'rangeFigRow';
 
-    rangeFig1 = document.createElement('p');
+    let rangeFig1 = document.createElement('p');
     rangeFig1.textContent = '2';
-    rangeFig2 = document.createElement('p');
+    let rangeFig2 = document.createElement('p');
     rangeFig2.textContent = '30';
     
-    number = document.createElement('p');
+    let number = document.createElement('p');
     number.textContent = currentSplineResolution;
     number.className = 'slider-number-hidden';
     
@@ -18,7 +18,7 @@ function createSlider() {
     div.appendChild(rangeFig2);
     container.appendChild(div);
 
-    slider = document.createElement('input');
+    let slider = document.createElement('input');
     slider.type = 'range';
     slider.min = 2;
     slider.max = 30;

@@ -192,14 +192,14 @@ function downloadJSONFile(content, fileName) {
 
 function exportSettings() {
     console.log('Got an export request')
-    config = formatConfig();
+    let config = formatConfig();
     config.text = currentText;
     config.textSize = titleSize;
     config.textPos = titleBottomMargin;
     config.margins = currentMargins; // the margins in the format config settings 
                                      // have been encoded into the shapes if there is some text.
                                      // We don't wnat that for config exports, only for drawing.
-    jsonData = {settings: config, drawing: currentJSONData}
+    let jsonData = {settings: config, drawing: currentJSONData}
 
     downloadJSONFile(JSON.stringify(jsonData), 'fresco_drawing.json');
 }

@@ -87,6 +87,7 @@ function draw() {
   background(colorFromHex(canvasColor));
   for (let i = 0; i < canvasBuffers.length; i++) {
     if (selectedLayers.includes(i)) {
+      tint(layerColors[i]);
       image(canvasBuffers[i], 0, 0);
     }
   }
@@ -180,13 +181,13 @@ function updateShapes(shapes, format, margins, aspectRatio) {
   });
 
   // set shapes color
-  shapes.forEach(s => {
-    let nuColor = layerColors[s.layer % layerColors.length];
-    if (nuColor == null) {
-      nuColor = 'fff';
-    }
-    s.setColor(colorFromHex(nuColor))
-  });
+  // shapes.forEach(s => {
+  //   let nuColor = layerColors[s.layer % layerColors.length];
+  //   if (nuColor == null) {
+  //     nuColor = 'fff';
+  //   }
+  //   s.setColor(colorFromHex(nuColor))
+  // });
 
   // filter out shapes that are not on a selected layer
   // and store as current shapes

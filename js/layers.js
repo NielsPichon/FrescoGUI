@@ -87,15 +87,42 @@ function toggleAllLayers(visible, update=true) {
     }
 }
 
-function createColorPickerObject(parent, id, clr, storeColor) {
+function createColorPickerObject(parent, id, clr, isLayerColor) {
     let colorPicker = document.createElement('button');
-    colorPicker.className = 'colorPicker';
+    colorPicker.className = 'colorPickerBttn';
     colorPicker.id = id;
     colorPicker.style.backgroundColor = clr;
-    if (storeColor) {
+    if (isLayerColor) {
         layerColors.push(clr);
     }
-    colorPicker.onclick = () => {console.log('color picker of layer ' + idx + ' clicked')}
+    let idx = layerColors.length - 1;
+    colorPicker.onclick = () => {
+        if (!document.getElementById('colorCheckbox').checked || !isLayerColor) {
+            let rgb = colorPicker.style.backgroundColor.match(/[\.\d]+/g).map(function (a) {
+                return +a
+            });
+            rgb = {r: rgb[0], g: rgb[1], b: rgb[2]};
+
+            createNewColorPicker(
+                colorPicker.offsetLeft,
+                colorPicker.offsetTop,
+                rgb,
+                (newClr) => {
+                    colorPicker.style.backgroundColor = newClr;
+                    if (isLayerColor) {
+                        layerColors[idx] = newClr;
+                    } else if (document.getElementById('colorCheckbox').checked) {
+                        for (let i = 0; i < layerColors.length; i++) {
+                            layerColors[i] = newClr;
+                            document.getElementById('layer-color-' + i).style.backgroundColor = newClr;
+                        }
+                    };
+
+                    redraw();
+                }
+            )
+        }
+    };
     parent.appendChild(colorPicker);
 }
 
@@ -136,7 +163,24 @@ function createApplyAll(parentId) {
     input.className = 'tickbox';
     input.id = 'colorCheckbox';
     clrDiv.appendChild(input);
+    input.onchange = () => {
+        if (input.checked) {
+            // retrieve global picker color as hex
+            let rgb = document.getElementById('global-picker').style.backgroundColor.match(/[\.\d]+/g).map(function (a) {
+                return +a
+            });
+            rgb = {r: rgb[0], g: rgb[1], b: rgb[2]};
+            let newClr = rgb2hex(rgb);
 
+            // assign it to all layers
+            for (let i = 0; i < layerColors.length; i++) {
+                layerColors[i] = newClr;
+                document.getElementById('layer-color-' + i).style.backgroundColor = newClr;
+            }
+
+            redraw();
+        }
+    }
     
     createColorPickerObject(clrDiv, 'global-picker', globalColor, false);
 
