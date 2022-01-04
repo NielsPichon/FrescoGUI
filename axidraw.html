@@ -50,12 +50,8 @@
                         <div class='drawRightCol'>
                             <div class='splineRes'>
                                 <p>Spline resolution</p>
-                                <div class='sliderContainer'>
-                                    <div class='rangeFigRow'>
-                                        <p class='rangeFig'>2</p>
-                                        <p class='rangeFig'>30</p>
-                                    </div>
-                                    <input type="range" min="2" max="30" value="10" class="slider" name='spline' id="spline" ondragend="updateResolution(document.getElementById('spline').value)">
+                                <div class='sliderContainer' id='slider-container'>
+                                    <script src='js/splineRes.js'></script>
                                 </div>
                             </div>
                             <div class='optimize'>

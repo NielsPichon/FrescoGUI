@@ -6,7 +6,7 @@ const formats = {
 };
 
 axidraw_options = {
-  speed_pendown: 25,
+  speed_pendown: 35,
   speed_penup: 75,
   accel: 75,
   pen_pos_down: 17,
@@ -143,10 +143,8 @@ function updateFormat(format) {
  * @param {number} resolution Number of subdivisions along a spline
  */
 function updateResolution(resolution) {
-  console.log('new res', resolution)
-  currentSplineResolution = resolution;
-  updateShapes(currentShapes, currentFormat, currentMargins, currentAspectRatio);
-  drawToBuffer();
+  currentSplineResolution = Number(resolution);
+  updateDrawing();
 }
 
 /**
@@ -176,7 +174,7 @@ function updateShapes(shapes, format, margins, aspectRatio) {
       point.y = -(point.y + 0.5) * scale_Y;
     });
 
-    shape.poligonize();
+    shape.poligonize(currentSplineResolution);
   });
 
   // set shapes color

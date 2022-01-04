@@ -1060,6 +1060,29 @@ input[type="file"] {
     border-radius: 3px;
 }
 
+
+.slider-number-div {
+    position: relative;
+    width: 100%;
+}
+
+.slider-number {
+    font-family: Fira Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+
+    color: var(--Blue);
+    opacity: 100%;
+    transition-duration: .5s;
+}
+.slider-number-hidden {
+    opacity: 0%;
+    transition-delay: .2s;
+    transition-duration: 0.5s;
+}
+
 .heading {
     display: flex;
     flex-direction: row;
