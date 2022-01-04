@@ -343,7 +343,7 @@ function loadSettings(input) {
     currentJSONData = result.drawing;
     axidraw_options = result.settings.axidraw_options;
     currentSplineResolution = result.settings.spline_res;
-    currentMargins = result.margins;
+    currentMargins = result.settings.margins;
     optimize = result.settings.optimize;
     currentFormat = [result.settings.format.x, result.settings.format.y];
     currentText = result.settings.text;
