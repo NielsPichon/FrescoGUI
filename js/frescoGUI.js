@@ -156,13 +156,15 @@ function updateResolution(resolution) {
  */
 function updateShapes(shapes, format, margins, aspectRatio) {
   let nuFormat = [490, 490 * currentFormat[1] / currentFormat[0]];
-  let nuMargin = margins[0] * height / format[1];
-  // scale_xx is the scale in x if a point with 1 in absciss is mapped to the
+  // let nuMargin = margins[0] * height / format[1];
+  let hRatio = height / format[1];
+  // scale_xx is the scale in x if a point with 1 in absciss (x) is mapped to the
   // edge of the paper minus the margin   
-  const scale_xx = nuFormat[0] - 2 * nuMargin;
-  // scale_xy is the scale in x if a point with 1 in ordinate is mapped to the
+  // const scale_xx = nuFormat[0] - 2 * nuMargin;
+  const scale_xx = nuFormat[0] - (margins[2] + margins[3]) * hRatio;
+  // scale_xy is the scale in x if a point with 1 in ordinate (y) is mapped to the
   // edge of the paper minus the margin
-  const scale_xy = (nuFormat[1] - 2 * nuMargin) * aspectRatio;
+  const scale_xy = (nuFormat[1] - (margins[0] + margins[1]) * hRatio) * aspectRatio;
   // we keep the smallest of the 2 scales
   const scale_X = min(scale_xx, scale_xy);
   const scale_Y = scale_X / aspectRatio;
@@ -170,8 +172,8 @@ function updateShapes(shapes, format, margins, aspectRatio) {
   // scale all points
   shapes.forEach(shape => {
     shape.vertices.forEach(point => {
-      point.x = (point.x - 0.5) * scale_X;
-      point.y = -(point.y + 0.5) * scale_Y;
+      point.x = (point.x - 0.5) * scale_X + (margins[2] - margins[3]) / format[0] * scale_X;
+      point.y = -(point.y + 0.5) * scale_Y + (margins[1] - margins[0]) / format[1] * scale_Y;
     });
 
     shape.poligonize(currentSplineResolution);
@@ -341,8 +343,7 @@ function loadSettings(input) {
     currentJSONData = result.drawing;
     axidraw_options = result.settings.axidraw_options;
     currentSplineResolution = result.settings.spline_res;
-    currentMargins[0] = result.settings.margin;
-    currentMargins = [currentMargins[0], currentMargins[0], currentMargins[0], currentMargins[0]];
+    currentMargins = result.margins;
     optimize = result.settings.optimize;
     currentFormat = [result.settings.format.x, result.settings.format.y];
     currentText = result.settings.text;
@@ -359,7 +360,7 @@ function loadSettings(input) {
     setAxidrawModelDropdown();
     setParametersDefault();
     setDefaultFormat();
-    setDefaultMargins();
+    setMargins();
     setTextDefaults();
     document.getElementById('optimizeCheckbox').checked = optimize;
     resetLayers(oldLayerCount);

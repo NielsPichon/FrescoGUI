@@ -19,7 +19,7 @@ function clipMargin(value, idx) {
         value = Math.min(currentFormat[1] / 2 - 1, value);
     }
     else {
-        value = Math.min(currentFormat[0] / 2 - 1, value);
+        value = Math.min(currentFormat[0] /2 - 1, value);
     }
 
     return Math.floor(value);
@@ -69,7 +69,6 @@ function setMargins() {
     document.getElementById('right-margin').value = currentMargins[3];
 }
 
-
 function createLinkIcon(parentId) {
     link = document.createElement('div');
     link.className = 'link';
@@ -103,12 +102,7 @@ function createMarginBox(parentId, id, idx) {
     box.appendChild(input);
 }
 
-function setDefaultMargins() {
-    document.getElementById('top-margin').value = currentMargins[0];
-    document.getElementById('bottom-margin').value = currentMargins[1];
-    document.getElementById('left-margin').value = currentMargins[2];
-    document.getElementById('right-margin').value = currentMargins[3];
-}
+
 
 
 createMarginRow('top-cross-row');

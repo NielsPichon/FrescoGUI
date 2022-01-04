@@ -97,13 +97,13 @@ function sendDrawResumeRequest() {
 }
 
 function prepareJSONData() {
-    if (currentText == '') {
-        return currentJSONData;
-    }
-    else {
-        let shapes = [...currentShapes, ...textShapes];
-        return JSON.parse(shapesToJSON(shapes));
-    }
+    // if (currentText == '') {
+    //     return currentJSONData;
+    // }
+    // else {
+    let shapes = [...currentShapes, ...textShapes];
+    return JSON.parse(shapesToJSON(shapes));
+    // }
 }
 
 function updateStatus(status) {
@@ -158,15 +158,16 @@ function getStatus() {
 }
 
 function formatConfig() {
-    let margin = currentMargins[0];
-    if (currentText != '') {
-        margin = 0;
-    }
+    // let margins = currentMargins;
+    // if (currentText != '') {
+    //     margins = [0, 0, 0, 0];
+    // }
 
     return {
         axidraw_options: axidraw_options,
         spline_res: currentSplineResolution,
-        margin: margin,
+        margin: 0, // we always encode the margins into the shapes
+                   // to be sure that what we draw is what we see
         optimize: optimize,
         format: {x: currentFormat[0], y: currentFormat[1]},
         layers: selectedLayers
@@ -195,6 +196,9 @@ function exportSettings() {
     config.text = currentText;
     config.textSize = titleSize;
     config.textPos = titleBottomMargin;
+    config.margins = currentMargins; // the margins in the format config settings 
+                                     // have been encoded into the shapes if there is some text.
+                                     // We don't wnat that for config exports, only for drawing.
     jsonData = {settings: config, drawing: currentJSONData}
 
     downloadJSONFile(JSON.stringify(jsonData), 'fresco_drawing.json');
