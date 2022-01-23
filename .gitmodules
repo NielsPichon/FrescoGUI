@@ -1,6 +1,3 @@
-[submodule "AxiFresco"]
-	path = AxiFresco
-	url = git@github.com:NielsPichon/AxiFresco.git
 [submodule "p5.Fresco"]
 	path = p5.Fresco
 	url = git@github.com:NielsPichon/p5.Fresco.git

@@ -12,7 +12,7 @@ from flask_restful import Api
 from flask_cors import CORS, cross_origin
 
 from lib.axirunner import RequestTypes, request_processor
-from AxiFresco.axifresco import Status
+from axifresco.axifresco import Status
 
 
 PORT = 8000
@@ -94,7 +94,7 @@ def get_browser() -> webbrowser.BaseBrowser:
         'macosx',
         'opera'
     ]
-    
+
     for candidate in browsers:
         try:
             browser = webbrowser.get(candidate)
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     logging.info('Starting python server...')
     app_proc = threading.Thread(target=app_runner, daemon=True)
     app_proc.start()
-    
+
     # wait for server initialisation
     time.sleep(1.0)
 

@@ -1,3 +1,4 @@
 Flask
 Flask-RESTful
 flask-cors
+git+https://github.com/NielsPichon/AxiFresco.git

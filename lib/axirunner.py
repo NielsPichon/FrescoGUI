@@ -10,7 +10,7 @@ from multiprocessing import Process, Event
 from multiprocessing import Queue as pQueue
 from multiprocessing.connection import Connection
 
-from AxiFresco.axifresco import Axifresco, Point, json_to_shapes, draw, Status
+from axifresco.axifresco import Axifresco, Point, json_to_shapes, draw, Status
 
 
 axi_thread = None
@@ -43,7 +43,7 @@ def axidraw_runner(draw_q: pQueue, pause_event: Event, abort_event: Event, statu
         except Exception as e:
             logging.error(f'Something wrong occured when trying to exit cleanly:\n{e}')
 
-    # try exiting cleanly. Will most likely fail to do so because of 
+    # try exiting cleanly. Will most likely fail to do so because of
     # how the terminate instruction works.
     signal.signal(signal.SIGINT, exit_cleanly)
     signal.signal(signal.SIGTERM, exit_cleanly)
@@ -58,7 +58,7 @@ def axidraw_runner(draw_q: pQueue, pause_event: Event, abort_event: Event, statu
                     'state': Status.PLAYING,
                     'message': 'Starting a new drawing. Pre-processing shapes...',
                     'progress': 0
-                })  
+                })
 
                 # process the data
                 global_config = data['config']
@@ -92,10 +92,10 @@ def draw_request(data, status_pipe: Connection):
     if axi_thread is None or not axi_thread.is_alive():
         axi_thread = Process(target=axidraw_runner, args=(draw_q, PAUSE, ABORT, status_pipe,), daemon=True)
         axi_thread.start()
-    
+
     # put the data
     draw_q.put(data)
-    
+
     # unset any pause or abort instruction
     PAUSE.clear()
     ABORT.clear()
@@ -105,7 +105,7 @@ def kill_axidraw(status_pipe: Connection):
             'state': Status.STOPPED,
             'message': 'Axidraw has been stopped. Press play to draw.',
             'progress': 0
-    })  
+    })
     axi_thread.terminate()
 
 def stop_draw(data, status_pipe: Connection):
@@ -114,7 +114,7 @@ def stop_draw(data, status_pipe: Connection):
 
     if is_axidraw_alive():
         kill_axidraw(status_pipe=status_pipe)
-        # because the axidraw will most likely have not 
+        # because the axidraw will most likely have not
         # exited cleanly, reset it.
         reset_axidraw({}, status_pipe)
     else:
@@ -169,7 +169,7 @@ def go_home(data, status_pipe: Connection):
         })
     else:
         logging.error('Axidraw is not stopped. Can\'t send home')
-    
+
 
 process_request = {
     RequestTypes.draw: draw_request,
