@@ -78,7 +78,16 @@ def axidraw_runner(draw_q: pQueue, pause_event: Event, abort_event: Event, statu
                 ax.set_config(config)
                 ax.resolution = spline_res
 
-                draw(shapes, aspect_ratio, ax, margin, optimize, smooth_trajectory=smoothTrajectory, preview=False)
+                draw(
+                    shapes,
+                    aspect_ratio,
+                    ax,
+                    margin,
+                    optimize,
+                    smooth_trajectory=False,
+                    preview=False,
+                    use_v2=smoothTrajectory
+                )
             else:
                 time.sleep(0.2)
     except:
