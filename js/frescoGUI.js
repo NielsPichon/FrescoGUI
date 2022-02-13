@@ -35,6 +35,7 @@ let currentAspectRatio = 1; // drawing aspect ratio
 let currentJSONData = null; // json data
 let currentSplineResolution = 10; // resolution of the splines
 let optimize = false; // whether the drawing should be optimized before drawing
+let smoothTrajectory = false; // whether to try and optimize the speed of drawing, smoothing the trajectory
 let currentLastLayer = 0;
 let selectedLayers = [0];
 
@@ -53,6 +54,11 @@ else {
 
 function toggleOptimize() {
   optimize = document.getElementById('optimizeCheckbox').checked;
+}
+
+
+function toggleSmooth() {
+  smoothTrajectory = document.getElementById('smoothTrajectory').checked;
 }
 
 function setup() {

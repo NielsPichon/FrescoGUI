@@ -169,6 +169,7 @@ function formatConfig() {
         margin: 0, // we always encode the margins into the shapes
                    // to be sure that what we draw is what we see
         optimize: optimize,
+        smoothTrajectory: smoothTrajectory,
         format: {x: currentFormat[0], y: currentFormat[1]},
         layers: selectedLayers
     }

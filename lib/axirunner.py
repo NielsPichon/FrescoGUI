@@ -69,6 +69,7 @@ def axidraw_runner(draw_q: pQueue, pause_event: Event, abort_event: Event, statu
                 optimize = global_config['optimize']
                 format = global_config['format']
                 activeLayers = global_config['layers']
+                smoothTrajectory = global_config['smoothTrajectory']
 
                 shapes, aspect_ratio = json_to_shapes(shapes)
                 shapes = [s for s in shapes if s.layer in activeLayers]
@@ -77,7 +78,7 @@ def axidraw_runner(draw_q: pQueue, pause_event: Event, abort_event: Event, statu
                 ax.set_config(config)
                 ax.resolution = spline_res
 
-                draw(shapes, aspect_ratio, ax, margin, optimize, preview=False)
+                draw(shapes, aspect_ratio, ax, margin, optimize, smooth_trajectory=smoothTrajectory, preview=False)
             else:
                 time.sleep(0.2)
     except:
