@@ -2,22 +2,12 @@ let activeButton = null;
 
 function deselectFormat(id) {
     if (id != null) {
-        let className = 'sizeCard';
-        if (id === 'custom')
-        {
-            className = 'customSize';
-        }        
-        document.getElementById('format-card-' + id).className = className;
+        document.getElementById('format-card-' + id).className = 'sizeCard';
     }
 }
 
 function selectFormat(id) {
-    let className = 'sizeCard selected';
-    if (id === 'custom')
-    {
-        className = 'customSize selected';
-    }
-    document.getElementById('format-card-' + id).className = className;
+    document.getElementById('format-card-' + id).className = 'sizeCard selected';
 }
 
 function createFormatButton(text, format, selected=false) {
@@ -43,39 +33,72 @@ function createFormatButton(text, format, selected=false) {
             deselectFormat(activeButton);
             activeButton = text;
             selectFormat(activeButton);
+            setCustomSize(...format);
             updateFormat(format);
         }
     }
 }
 
+function onCustomFormatChange() {
+    let w = document.getElementById('widthBox');
+    let width = Number(w.text);
+    let h = document.getElementById('heightBox');
+    let height = Number(h.text);
+
+    if (width != currentFormat[0] || height != currentFormat[1]) {
+        deselectFormat(activeButton);
+        activeButton = null;
+        updateFormat([width, height]);
+    }
+}
+
 function createCustomFormatButtom() {
-    sizeCard = document.createElement('button');
+    sizeCard = document.createElement('div');
     sizeCard.id = 'format-card-custom';
     sizeCard.className = 'customSize';
     document.getElementById('format').appendChild(sizeCard);
 
-    span = document.createElement('span');
-    span.className = 'sizeCardText';
-    span.textContent = 'Custom';
-    span.id = 'format-text-custom';
-    sizeCard.appendChild(span);
+    let widthBox = document.createElement('div');
+    widthBox.className = 'sizeBox';
+    sizeCard.appendChild(widthBox);
+
+    let width = document.createElement('input');
+    width.type = 'number';
+    width.value = formats.a3[0];
+    width.id = 'widthBox';
+    width.className = 'sizeArea';
+    widthBox.appendChild(width);
+
+    let p = document.createElement('p');
+    p.textContent = 'x';
+    sizeCard.appendChild(p);
+
+    let heightBox = document.createElement('div');
+    heightBox.className = 'sizeBox';
+    sizeCard.appendChild(heightBox);
+
+    let height = document.createElement('input');
+    height.type = 'number';
+    height.value = formats.a3[1];
+    height.id = 'heightBox';
+    height.className = 'sizeArea';
+    heightBox.appendChild(height);
+
+    let p2 = document.createElement('p');
+    p2.textContent = 'mm';
+    sizeCard.appendChild(p2);
+}
 
 
-    sizeCard.onclick = () => {
-        if (currentFormat !== 'custom') {
-            deselectFormat(activeButton);
-            activeButton = 'custom';
-            selectFormat(activeButton);
-            updateDrawing();
-        }
-    }
+function setCustomSize(width, height) {
+    document.getElementById('widthBox').text = width;
+    document.getElementById('heightBox').text = height;
 }
 
 function setDefaultFormat() {
     deselectFormat('A4')
     deselectFormat('A5')
     deselectFormat('A3')
-    deselectFormat('custom')
 
     if (currentFormat[0] == formats.a4[0] && currentFormat[1] == formats.a4[1]) {
         selectFormat('A4');
@@ -86,9 +109,7 @@ function setDefaultFormat() {
     else if (currentFormat[0] == formats.a5[0] && currentFormat[1] == formats.a5[1]) {
         selectFormat('A5');
     }
-    else {
-        selectFormat('custom');
-    }
+    setCustomSize(...currentFormat);
 }
 
 topRow = document.createElement('div');

@@ -758,17 +758,18 @@ input[type="file"] {
 .customSize {
     /* Auto Layout */
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    padding: 24px;
+    /* padding: 24px; */
+    justify-content: center;
 
     /* Light Grey */
-    background: var(--light-gray);
+    /* background: var(--light-gray); */
 
     /* Medium Grey */
-    border: 1px solid var(--med-gray);
-    box-sizing: border-box;
-    border-radius: 2px;
+    /* border: 1px solid var(--med-gray); */
+    /* box-sizing: border-box; */
+    /* border-radius: 2px; */
 
     /* Inside Auto Layout */
     flex: none;
@@ -1253,12 +1254,51 @@ input:checked + .switchSlider:before {
     margin: 0px 8px;
 }
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.sizeBox {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+    align-items: center;
+    padding: 8px;
+
+    width: 24px;
+
+    /* White */
+    background: var(--White);
+
+    /* Medium Grey */
+    border: 1px solid var(--med-gray);
+    box-sizing: border-box;
+    border-radius: 4px;
+
+    /* Inside Auto Layout */
+    flex-grow: 1;
+    margin: 0px 8px;
+}
+
 .textBox:focus-within {
     border-color: var(--Blue);
 }
 
 .textArea {
     width: 100%;
+}
+
+.sizeArea {
+    width: 36px;
 }
 
 .percentValue {
