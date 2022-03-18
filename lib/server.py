@@ -14,7 +14,6 @@ from flask_cors import CORS, cross_origin
 from lib.axirunner import RequestTypes, request_processor
 from axifresco.axifresco import Status
 
-
 PORT = 8000
 
 app = Flask(__name__)
@@ -25,7 +24,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/draw', methods=['POST'])
 @cross_origin()
 def draw():
-    app.logger.debug("Got a new draw request")
+    logging.debug("Got a new draw request")
     try:
         draw_data = json.loads(request.data.decode())
         app.config['Queue'].put((RequestTypes.draw, draw_data))
@@ -36,28 +35,28 @@ def draw():
 @app.route('/stop', methods=['POST'])
 @cross_origin()
 def stop():
-    app.logger.debug('Got a request to stop immediatly')
+    logging.debug('Got a request to stop immediatly')
     app.config['Queue'].put((RequestTypes.stop, ''))
     return "sent"
 
 @app.route('/pause', methods=['POST'])
 @cross_origin()
 def pause():
-    app.logger.debug('Got a request to pause/resume')
+    logging.debug('Got a request to pause/resume')
     app.config['Queue'].put((RequestTypes.pause_resume, ''))
     return "sent"
 
 @app.route('/home', methods=['POST'])
 @cross_origin()
 def home():
-    app.logger.debug('Got a request to send axidraw home')
+    logging.debug('Got a request to send axidraw home')
     app.config['Queue'].put((RequestTypes.home, ''))
     return "sent"
 
 @app.route('/reset', methods=['POST'])
 @cross_origin()
 def reset():
-    app.logger.debug('Got a request to stop motors')
+    logging.debug('Got a request to stop motors')
     app.config['Queue'].put((RequestTypes.reset, ''))
     return "sent"
 
@@ -102,6 +101,9 @@ def get_browser() -> webbrowser.BaseBrowser:
         except:
             pass
     raise Exception('Could not find any available internet browser')
+
+app.logger.disabled = True
+log = logging.getLogger('werkzeug').disabled = True
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@ import time
 import signal
 import atexit
 import logging
-from queue import Queue
+from queue import Queue, Empty
 from typing import NoReturn
 from multiprocessing import Process, Event
 from multiprocessing import Queue as pQueue
@@ -116,6 +116,7 @@ def kill_axidraw(status_pipe: Connection):
             'message': 'Axidraw has been stopped. Press play to draw.',
             'progress': 0
     })
+    clear_draw_q()
     axi_thread.terminate()
 
 def stop_draw(data, status_pipe: Connection):
@@ -127,6 +128,7 @@ def stop_draw(data, status_pipe: Connection):
         # because the axidraw will most likely have not
         # exited cleanly, reset it.
         reset_axidraw({}, status_pipe)
+        clear_draw_q()
     else:
         logging.warning('The axidraw process is already stopped.')
 
@@ -168,10 +170,18 @@ def reset_axidraw(data, status_pipe: Connection):
             'progress': 0
     })
 
+def clear_draw_q():
+    try:
+        while True:
+            draw_q.get_nowait()
+    except Empty:
+        pass
+
 def go_home(data, status_pipe: Connection):
     if PAUSE.is_set():
         logging.info('Aborting and sending axidraw home')
         ABORT.set()
+        clear_draw_q()
         status_pipe.send({
             'state': Status.STOPPED,
             'message': 'Axidraw has been sent home. Press play to draw.',
@@ -195,7 +205,6 @@ def request_processor(q: Queue, status_pipe: Connection) -> NoReturn:
     """
     try:
         logging.info('Ready to boogie!')
-        logging.info(q)
         while 1:
             request, data = q.get()
             try:
