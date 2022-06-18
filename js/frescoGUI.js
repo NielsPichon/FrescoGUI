@@ -29,7 +29,7 @@ let canvasBuffers; // buffer we are going to draw to, to avoid freezing the page
 let textCanvasBuffer; // buffer to draw text to
 
 let currentShapes = []; // shapes to draw
-let currentFormat = formats.a3; // current paper format
+let currentFormat = [...formats.a3]; // current paper format
 let currentMargins = [30, 30, 30, 30]; // margin on each side of the canvas
 let currentAspectRatio = 1; // drawing aspect ratio
 let currentJSONData = null; // json data
@@ -286,7 +286,7 @@ function updateText(text) {
  * @param {string} filepath path to file
  */
 function loadDrawing(filepath) {
-  console.log('Loading', currentJSONData);
+  console.log('Loading drawing from file');
   loadJSON(filepath, function(response) {
       // Parsing JSON string into object
       console.log('response', response);
