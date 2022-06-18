@@ -212,7 +212,7 @@ async function drawText() {
       currentText,
       titleSize,
       createVector(0, -height / 2 + 490 / currentFormat[0] * titleBottomMargin),
-      false
+      true
     );
     textShapes.forEach(s => s.drawToBuffer(textCanvasBuffer));
   }
